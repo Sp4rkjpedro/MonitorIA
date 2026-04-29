@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="page-top">
+    <div>
+        <h1 class="titulo-pagina">{{ pergunta.titulo }}</h1>
+        <span class="subtitulo">{{ pergunta.disciplina or 'Geral' }}</span>
+    </div>
+    <a href="{{ url_for('fazer_pergunta') }}" class="btn btn-roxo">Nova pergunta</a>
+</div>
+
+<div class="pergunta-container">
+    <div class="pergunta-header">
+        <div class="header-meta">
+            <span class="badge badge-roxo">{{ pergunta.disciplina }}</span>
+            {% set tem_solucao = pergunta.respostas | selectattr('eh_solucao') | list | length > 0 %}
+            {% if tem_solucao %}
+                <span class="badge badge-resolvida">✓ Solução marcada</span>
+            {% endif %}
+        </div>
+
+        <h2>{{ pergunta.titulo }}</h2>
+    </div>
+
+    <div class="pergunta-corpo">
+        <p>{{ pergunta.corpo }}</p>
+    </div>
+
+    <div class="box-ia corpo-ia">
+        <div class="header-ia"><span class="icone-ia">🤖</span> Sugestão da MonitorIA</div>
+        <div class="alerta-verificacao">Resposta não verificada — aguardando monitor humano</div>
+        <p>{{ pergunta.sugestao_ia if pergunta.sugestao_ia is defined else 'A sugestão automática da IA será exibida aqui após a análise da pergunta.' }}</p>
+        <p class="meta-ia">Modelo: MonitorIA · sugestão instantânea</p>
+    </div>
+
+    <div class="pergunta-footer">
+        <div class="autor">Usuário #{{ pergunta.usuario_id }} · {{ pergunta.data_criacao.strftime('%d/%m/%Y %H:%M') if pergunta.data_criacao else '—' }}</div>
+        <div class="stats">
+            <span>💬 {{ pergunta.respostas|length }} respostas</span>
+            <span>👁️ 0 visualizações</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

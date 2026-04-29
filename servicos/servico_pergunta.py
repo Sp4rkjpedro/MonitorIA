@@ -34,3 +34,8 @@ class ServicoPergunta:
         if not pergunta:
             raise ValueError("Pergunta não encontrada.")
         return pergunta
+
+    def listar_disciplinas(self) -> list[str]:
+        # Em um sistema real, isso viria do banco de dados (modelos.entidades)
+        # Para este protótipo, vamos usar uma lista fixa que condiz com a imagem_0.png
+        return ["Java: Polimorfismo", "Python", "Cálculo II", "Estrutura de Dados", "Banco de Dados", "Web"]
