@@ -1,0 +1,476 @@
+/* static/css/estilos.css */
+
+/* --- VARIÁVEIS DE COR (Inspiradas nas imagens) --- */
+:root {
+    --bg-fundo: #12141a;
+    --bg-card: #1c1e26;
+    --bg-ia: #2e1c4e; /* Roxo escuro para a IA */
+    
+    --texto-principal: #ffffff;
+    --texto-secundario: #b3b3b3;
+    --texto-ia: #e1ccff; /* Roxo claro para o texto da IA */
+    
+    --roxo-principal: #6c5ce7;
+    --roxo-hover: #5a4bcf;
+    --roxo-badge: #d1b1ff; /* Para o ícone da IA */
+
+    --verde-resolvido: #4ade80;
+    --laranja-alerta: #ffac33;
+
+    --gap-padrao: 1.5rem;
+    --raio-padrao: 10px;
+}
+
+/* --- RESET & BÁSICOS --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-fundo);
+    color: var(--texto-principal);
+    line-height: 1.6;
+}
+
+/* --- LAYOUT --- */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--gap-padrao);
+}
+
+main {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 280px 1fr; /* Sidebar e Conteúdo */
+    gap: var(--gap-padrao);
+}
+
+/* --- HEADER --- */
+header {
+    background-color: var(--bg-card);
+    padding: 1rem 0;
+    border-bottom: 1px solid #2a2d38;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo-m {
+    color: var(--roxo-principal);
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--texto-secundario);
+    font-weight: 500;
+}
+
+nav a.active, nav a:hover {
+    color: var(--texto-principal);
+    border-bottom: 2px solid var(--roxo-principal);
+    padding-bottom: 0.5rem;
+}
+
+.header-acoes {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* --- BOTÕES --- */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-roxo {
+    background-color: var(--roxo-principal);
+    color: #fff;
+}
+
+.btn-roxo:hover {
+    background-color: var(--roxo-hover);
+}
+
+/* --- SIDEBAR --- */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.sidebar-sessao h3 {
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    color: var(--texto-secundario);
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+}
+
+.sidebar-sessao ul {
+    list-style: none;
+}
+
+.sidebar-sessao li {
+    padding: 0.5rem;
+    border-radius: var(--raio-padrao);
+    cursor: pointer;
+}
+
+.sidebar-sessao li:hover {
+    background-color: #2a2d38;
+}
+
+.sidebar-sessao a {
+    text-decoration: none;
+    color: var(--texto-principal);
+    display: flex;
+    justify-content: space-between;
+}
+
+.contador {
+    color: var(--texto-secundario);
+    font-size: 0.9rem;
+}
+
+/* --- CARDS E CONTEÚDO PRINCIPAL --- */
+.conteudo {
+    background-color: var(--bg-card);
+    padding: 2rem;
+    border-radius: var(--raio-padrao);
+}
+
+.titulo-pagina {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+}
+
+/* --- FORMULÁRIOS (image_0.png) --- */
+.form-pergunta {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-grupo label {
+    font-weight: 600;
+}
+
+.form-control {
+    padding: 1rem;
+    background-color: #12141a;
+    border: 1px solid #2a2d38;
+    color: var(--texto-principal);
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.form-control:focus {
+    outline: 2px solid var(--roxo-principal);
+}
+
+.textarea-pergunta {
+    resize: vertical;
+    min-height: 200px;
+    font-family: 'Courier New', Courier, monospace; /* Para sugerir markdown */
+}
+
+/* --- BOX DA IA --- */
+.box-ia {
+    background-color: var(--bg-ia);
+    border: 1px solid #4a2f8c;
+    border-radius: var(--raio-padrao);
+    padding: 1rem;
+    color: var(--texto-ia);
+}
+
+.header-ia {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.icone-ia {
+    background-color: var(--roxo-badge);
+    color: var(--bg-ia);
+    padding: 0.25rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.alerta-verificacao {
+    color: var(--laranja-alerta);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+/* Estilos de código dentro do Markdown renderizado pela IA */
+.corpo-ia code {
+    background-color: #12141a;
+    color: #4ade80;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+}
+
+/* --- DETECÇÃO DE DUPLICATAS (image_0.png) --- */
+.duplicatas {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.page-header,
+.page-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.page-header .subtitulo,
+.page-top .subtitulo {
+    color: var(--texto-secundario);
+    font-size: 0.95rem;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: #15171f;
+    border: 1px solid #2a2d38;
+    border-radius: 999px;
+    padding: 0.5rem 0.85rem;
+}
+
+.search-input {
+    border: none;
+    background: transparent;
+    color: var(--texto-principal);
+    width: 240px;
+}
+
+.search-input:focus {
+    outline: none;
+}
+
+.user-badge {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6c5ce7, #8b70f2);
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.header-brand {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.header-acoes {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.lista-perguntas {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+
+.card-pergunta {
+    background-color: #171a24;
+    border: 1px solid #2a2d38;
+    border-radius: var(--raio-padrao);
+    padding: 1.5rem;
+    transition: border-color 0.2s ease;
+}
+
+.card-pergunta:hover {
+    border-color: var(--roxo-principal);
+}
+
+.card-pergunta h2 {
+    margin-top: 1rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.3rem;
+}
+
+.card-pergunta h2 a {
+    color: var(--texto-principal);
+    text-decoration: none;
+}
+
+.card-pergunta p {
+    color: var(--texto-secundario);
+    line-height: 1.8;
+}
+
+.card-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.card-footer {
+    margin-top: 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    color: var(--texto-secundario);
+    font-size: 0.95rem;
+}
+
+.pergunta-container {
+    background-color: #171a24;
+    border: 1px solid #2a2d38;
+    border-radius: var(--raio-padrao);
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.pergunta-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.pergunta-corpo {
+    color: var(--texto-secundario);
+    line-height: 1.8;
+    white-space: pre-wrap;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.badge-secundaria {
+    background: #262a36;
+    color: var(--texto-secundario);
+}
+
+.badge-resolvida {
+    background: rgba(74, 222, 128, 0.16);
+    color: var(--verde-resolvido);
+}
+
+.nenhuma-pergunta {
+    padding: 2rem;
+    border: 1px dashed #2a2d38;
+    border-radius: var(--raio-padrao);
+    color: var(--texto-secundario);
+    text-align: center;
+}
+
+.duplicata-item {
+    display: flex;
+    justify-content: space-between;
+    background-color: #2a2d38;
+    padding: 0.75rem;
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--texto-principal);
+}
+
+/* --- TAGS (Badges) --- */
+.badge {
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.badge-resolvida {
+    color: var(--verde-resolvido);
+    border: 1px solid var(--verde-resolvido);
+}
+
+/* --- VISUALIZAÇÃO DA PERGUNTA (image_1.png) --- */
+.pergunta-header {
+    margin-bottom: 1.5rem;
+}
+
+.pergunta-votos {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pergunta-corpo {
+    margin-bottom: 2rem;
+}
+
+/* Estilos para o bloco de código Markdown real */
+pre {
+    background-color: #12141a;
+    padding: 1rem;
+    border-radius: 6px;
+    margin: 1rem 0;
+    overflow-x: auto;
+}
+
+code {
+    font-family: 'Consolas', 'Monaco', monospace;
+}
