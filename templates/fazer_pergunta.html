@@ -1,59 +1,85 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1 class="titulo-pagina">Faça uma nova pergunta</h1>
+<div class="page-header">
+    <h1 class="titulo-pagina">Nova Dúvida Acadêmica</h1>
+    <p class="subtitulo">Preencha os campos abaixo para receber auxílio dos monitores e da nossa IA.</p>
+</div>
 
 <form class="form-pergunta" action="{{ url_for('fazer_pergunta') }}" method="post">
+    
     <div class="form-grupo">
-        <label for="titulo">Título da pergunta</label>
-        <input
-            type="text"
-            id="titulo"
-            name="titulo"
-            class="form-control"
-            placeholder="Ex: Como implementar polimorfismo em Java?"
-            value="{{ form.titulo if form is defined else '' }}"
+        <label for="titulo">Título da Pergunta</label>
+        <input 
+            type="text" 
+            id="titulo" 
+            name="titulo" 
+            class="form-control" 
+            placeholder="Ex: Como funciona o Polimorfismo em Java?"
+            value="{{ form.titulo if form is defined else '' }}" 
             required>
-        
-        <div id="duplicatas-container" class="duplicatas box-ia" {% if not duplicatas %}style="display: none;"{% endif %}>
-            <div class="header-ia"><span class="icone-ia">🤖</span> IA detectou possíveis duplicatas</div>
-            <div class="duplicatas-lista">
-                {% if duplicatas %}
-                    {% for duplicata in duplicatas %}
-                        <a href="{{ url_for('ver_pergunta', id=duplicata.id) }}" class="duplicata-item">
-                            {{ duplicata.titulo }} <span class="contador">{{ duplicata.respostas|length }} respostas</span>
-                        </a>
-                    {% endfor %}
-                {% endif %}
-            </div>
-        </div>
     </div>
 
     <div class="form-grupo">
-        <label for="disciplina">Tópico / Disciplina</label>
+        <label for="disciplina">Disciplina / Tópico</label>
         <select id="disciplina" name="disciplina" class="form-control" required>
-            <option value="" disabled selected>Selecione a disciplina</option>
+            <option value="" disabled selected>Selecione uma disciplina...</option>
             {% for disciplina in disciplinas %}
-                <option value="{{ disciplina }}" {% if form is defined and form.disciplina == disciplina %}selected{% endif %}>{{ disciplina }}</option>
+                <option value="{{ disciplina }}" {% if form is defined and form.disciplina == disciplina %}selected{% endif %}>
+                    {{ disciplina }}
+                </option>
             {% endfor %}
         </select>
     </div>
 
     <div class="form-grupo">
-        <label for="corpo">Sua pergunta (suporta markdown e blocos de código)</label>
-        <textarea
-            id="corpo"
-            name="corpo"
-            class="form-control textarea-pergunta"
-            placeholder="Descreva sua dúvida... use ```java para blocos de código"
+        <label for="corpo">Descrição Detalhada</label>
+        <textarea 
+            id="corpo" 
+            name="corpo" 
+            class="form-control textarea-pergunta" 
+            rows="10"
+            placeholder="Descreva sua dúvida aqui. Você pode colar trechos de código usando ```..."
             required>{{ form.corpo if form is defined else '' }}</textarea>
     </div>
 
-    <p><span class="icone-ia">💡</span> A IA gerará uma sugestão imediata após postar</p>
-    
-    <div class="form-acoes">
-        <button type="submit" class="btn btn-roxo">Publicar pergunta</button>
+    <div class="box-ia-aviso">
+        <span class="icone-ia">🤖</span>
+        <p><strong>Monitor Virtual Ativo:</strong> Ao publicar, nossa IA analisará sua dúvida e gerará uma explicação inicial em segundos.</p>
     </div>
+
+    <div class="form-acoes">
+        <button type="submit" class="btn btn-roxo">🚀 Publicar Pergunta</button>
+        <a href="{{ url_for('base') }}" class="btn btn-link">Cancelar</a>
+    </div>
+
 </form>
+
+<style>
+    /* Sugestão de CSS para a caixa de aviso da IA */
+    .box-ia-aviso {
+        background: rgba(138, 43, 226, 0.1);
+        border-left: 4px solid #8A2BE2;
+        padding: 15px;
+        margin: 20px 0;
+        display: flex;
+        align-items: center;
+        border-radius: 4px;
+    }
+    .icone-ia {
+        font-size: 24px;
+        margin-right: 15px;
+    }
+    .box-ia-aviso p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: #e0e0e0;
+    }
+    .btn-link {
+        color: #ccc;
+        text-decoration: none;
+        margin-left: 15px;
+    }
+</style>
 
 {% endblock %}

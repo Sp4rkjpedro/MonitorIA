@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MonitorIA - O seu assistente acadêmico</title>
+    <title>MonitorIA - Assistente Acadêmico</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
-    </head>
+</head>
 <body>
-    
     <header>
         <div class="container header-top">
             <div class="header-brand">
@@ -15,19 +14,12 @@
                 <nav>
                     <ul>
                         <li><a href="{{ url_for('base') }}" class="active">Perguntas</a></li>
-                        <li><a href="#">Disciplinas</a></li>
-                        <li><a href="#">Monitores</a></li>
-                        <li><a href="#">Minhas Dúvidas</a></li>
-                    </ul>
+                        </ul>
                 </nav>
             </div>
             <div class="header-acoes">
-                <div class="search-box">
-                    <span class="search-icon">🔍</span>
-                    <input type="search" name="q" placeholder="Buscar perguntas..." class="form-control search-input">
-                </div>
                 <a href="{{ url_for('fazer_pergunta') }}" class="btn btn-roxo">+ Nova Pergunta</a>
-                <div class="user-badge">JA</div>
+                <div class="user-badge" title="Usuário Logado">JP</div>
             </div>
         </div>
     </header>
@@ -36,70 +28,27 @@
         <main>
             <aside class="sidebar">
                 <section class="sidebar-sessao">
-                    <h3>TÓPICOS</h3>
+                    <h3>DISCIPLINAS</h3>
                     <ul>
-                        {% if topicos is defined %}
-                            {% for topico in topicos %}
-                                <li>
-                                    <a href="#">
-                                        <!-- <span class="dot" style="background-color: {{ topico.cor | default('orange') }}"></span> -->
-                                        {{ topico.nome }}
-                                        <span class="contador">{{ topico.contador }}</span>
-                                    </a>
-                                </li>
+                        {% if disciplinas %}
+                            {% for disc in disciplinas %}
+                                <li><a href="#">{{ disc }}</a></li>
                             {% endfor %}
                         {% else %}
-                            <li><a href="#"><span class="dot" style="background-color: orange"></span>Java<span class="contador">42</span></a></li>
-                            <li><a href="#"><span class="dot" style="background-color: skyblue"></span>Python<span class="contador">37</span></a></li>
-                            <li><a href="#"><span class="dot" style="background-color: red"></span>Cálculo II<span class="contador">28</span></a></li>
-                            <li><a href="#"><span class="dot" style="background-color: green"></span>Estrutura de Dados<span class="contador">21</span></a></li>
-                            <li><a href="#"><span class="dot" style="background-color: silver"></span>Banco de Dados<span class="contador">15</span></a></li>
-                            <li><a href="#"><span class="dot" style="background-color: cyan"></span>Web<span class="contador">12</span></a></li>
+                            <li><a href="#">Carregando tópicos...</a></li>
                         {% endif %}
                     </ul>
                 </section>
-                <div class="box-groq box-ia">
+                <div class="box-ia sidebar-info">
                     <h4>Monitor Virtual</h4>
-                    <p>Receba uma sugestão instantânea da IA enquanto aguarda um monitor humano.</p>
+                    <p>Sua dúvida é analisada instantaneamente pelo nosso modelo de IA.</p>
                 </div>
             </aside>
 
             <section class="conteudo">
-                {% block content %}
-                    {% if perguntas is defined %}
-                        <div class="page-header">
-                            <div>
-                                <h1 class="titulo-pagina">Perguntas recentes</h1>
-                                <span class="subtitulo">Últimas dúvidas publicadas pela comunidade</span>
-                            </div>
-                        </div>
-
-                        {% if perguntas %}
-                            <div class="lista-perguntas">
-                                {% for pergunta in perguntas %}
-                                    <article class="card-pergunta">
-                                        <div class="card-meta">
-                                            <span class="badge badge-roxo">{{ pergunta.disciplina }}</span>
-                                            <span class="badge badge-secundaria">{{ pergunta.respostas|length }} respostas</span>
-                                        </div>
-
-                                        <h2><a href="{{ url_for('ver_pergunta', id=pergunta.id) }}">{{ pergunta.titulo }}</a></h2>
-                                        <p>{{ pergunta.corpo[:220] }}{% if pergunta.corpo|length > 220 %}...{% endif %}</p>
-
-                                        <div class="card-footer">
-                                            <span>Publicado em {{ pergunta.data_criacao.strftime('%d/%m/%Y %H:%M') if pergunta.data_criacao else '—' }}</span>
-                                        </div>
-                                    </article>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            <div class="nenhuma-pergunta">Nenhuma pergunta cadastrada ainda. Seja o primeiro a publicar!</div>
-                        {% endif %}
-                    {% endif %}
-                {% endblock %}
+                {% block content %}{% endblock %}
             </section>
         </main>
     </div>
-
 </body>
 </html>
