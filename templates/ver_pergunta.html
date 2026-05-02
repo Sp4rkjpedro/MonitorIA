@@ -4,41 +4,70 @@
 <div class="page-top">
     <div>
         <h1 class="titulo-pagina">{{ pergunta.titulo }}</h1>
-        <span class="subtitulo">{{ pergunta.disciplina or 'Geral' }}</span>
+        <span class="subtitulo">{{ pergunta.disciplina }}</span>
     </div>
-    <a href="{{ url_for('fazer_pergunta') }}" class="btn btn-roxo">Nova pergunta</a>
+    <a href="{{ url_for('base') }}" class="btn btn-secundario">← Voltar</a>
 </div>
 
 <div class="pergunta-container">
     <div class="pergunta-header">
         <div class="header-meta">
             <span class="badge badge-roxo">{{ pergunta.disciplina }}</span>
-            {% set tem_solucao = pergunta.respostas | selectattr('eh_solucao') | list | length > 0 %}
-            {% if tem_solucao %}
-                <span class="badge badge-resolvida">✓ Solução marcada</span>
+            {# Verifica se alguma resposta foi marcada como solução #}
+            {% if pergunta.respostas | selectattr('eh_solucao') | list | length > 0 %}
+                <span class="badge badge-resolvida">✓ Resolvida</span>
             {% endif %}
         </div>
-
-        <h2>{{ pergunta.titulo }}</h2>
+        <p class="pergunta-info">
+            Publicado por Aluno #{{ pergunta.usuario_id }} em {{ pergunta.data_criacao.strftime('%d/%m/%Y às %H:%M') }}
+        </p>
     </div>
 
     <div class="pergunta-corpo">
-        <p>{{ pergunta.corpo }}</p>
+        {{ pergunta.corpo }}
     </div>
 
+    <hr class="divisor">
+
+    {# Buscamos a resposta que foi marcada como vinda da IA #}
+    {% set resposta_ia = pergunta.respostas | selectattr('eh_ia', 'equalto', True) | first %}
+    
     <div class="box-ia corpo-ia">
-        <div class="header-ia"><span class="icone-ia">🤖</span> Sugestão da MonitorIA</div>
-        <div class="alerta-verificacao">Resposta não verificada — aguardando monitor humano</div>
-        <p>{{ pergunta.sugestao_ia if pergunta.sugestao_ia is defined else 'A sugestão automática da IA será exibida aqui após a análise da pergunta.' }}</p>
-        <p class="meta-ia">Modelo: MonitorIA · sugestão instantânea</p>
+        <div class="header-ia">
+            <span class="icone-ia">🤖</span> 
+            <strong>Monitor Virtual (Llama-3 via Groq)</strong>
+        </div>
+        
+        {% if resposta_ia %}
+            <div class="conteudo-ia">
+                {{ resposta_ia.corpo }}
+            </div>
+            <div class="alerta-verificacao">
+                ⚠️ Resposta automática para auxílio rápido. Aguarde a validação de um monitor humano.
+            </div>
+        {% else %}
+            <div class="processando-ia">
+                <p>O Monitor Virtual está analisando sua pergunta e gerando uma explicação...</p>
+            </div>
+        {% endif %}
     </div>
 
-    <div class="pergunta-footer">
-        <div class="autor">Usuário #{{ pergunta.usuario_id }} · {{ pergunta.data_criacao.strftime('%d/%m/%Y %H:%M') if pergunta.data_criacao else '—' }}</div>
-        <div class="stats">
-            <span>💬 {{ pergunta.respostas|length }} respostas</span>
-            <span>👁️ 0 visualizações</span>
-        </div>
+    <div class="respostas-comunidade">
+        <h3>💬 {{ pergunta.respostas | rejectattr('eh_ia') | list | length }} Respostas da Comunidade</h3>
+        
+        {% for resposta in pergunta.respostas if not resposta.eh_ia %}
+            <div class="card-resposta {% if resposta.eh_solucao %}solucao{% endif %}">
+                <div class="resposta-header">
+                    <strong>Monitor/Aluno #{{ resposta.usuario_id }}</strong>
+                    <span>{{ resposta.data_criacao.strftime('%d/%m/%Y') }}</span>
+                </div>
+                <div class="resposta-corpo">
+                    {{ resposta.corpo }}
+                </div>
+            </div>
+        {% else %}
+            <p class="sem-respostas">Nenhum monitor humano respondeu ainda.</p>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}
