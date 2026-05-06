@@ -7,12 +7,13 @@ load_dotenv()
 
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from extensoes import banco
-from modelos.entidades import Usuario
+from modelos.entidades import Usuario, Pergunta, Resposta
 from controles.rotas_perguntas import blueprint_perguntas
 from servicos.servico_pergunta import ServicoPergunta
 from repositorios.repositorio_pergunta import RepositorioPergunta
 from servicos.servico_ia import ServicoIA
 from repositorios.repositorio_resposta import RepositorioResposta
+from controles.rotas_autenticacao import blueprint_auth
 
 def criar_app() -> Flask:
     app = Flask(__name__)
@@ -20,15 +21,16 @@ def criar_app() -> Flask:
     # Configurações do Banco de Dados
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///monitoria.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
     # Inicialização
     banco.init_app(app)
     app.register_blueprint(blueprint_perguntas)
+    app.register_blueprint(blueprint_auth)
 
     # Instanciando Repositórios e Serviços
     repo_pergunta = RepositorioPergunta()
     repo_resposta = RepositorioResposta()
-    
     servico = ServicoPergunta(repo_pergunta)
     servico_ia = ServicoIA(repo_resposta)
 
@@ -116,7 +118,7 @@ def criar_app() -> Flask:
     with app.app_context():
         banco.create_all()
         if not Usuario.query.first():
-            banco.session.add(Usuario(nome='Admin', email='admin@monitoria.local', papel='aluno'))
+            banco.session.add(Usuario(nome='Admin', email='admin@monitoria.local', papel='aluno', senha_hash='admin123'))
             banco.session.commit()
 
     return app

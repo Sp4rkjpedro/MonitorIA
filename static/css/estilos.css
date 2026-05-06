@@ -474,3 +474,61 @@ pre {
 code {
     font-family: 'Consolas', 'Monaco', monospace;
 }
+
+/* static/css/estilos.css (Adições) */
+
+.auth-container {
+    max-width: 500px;
+    margin: 4rem auto;
+    padding: 2.5rem;
+}
+
+.auth-link {
+    margin-top: 1.5rem;
+    text-align: center;
+    color: var(--texto-secundario);
+}
+
+.auth-link a {
+    color: var(--roxo-principal);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.btn-logout {
+    background-color: transparent;
+    border: 1px solid var(--laranja-alerta);
+    color: var(--laranja-alerta);
+}
+
+.btn-logout:hover {
+    background-color: var(--laranja-alerta);
+    color: #12141a;
+}
+
+/* Sistema de Alertas (Flash Messages) */
+.alerta {
+    padding: 1rem;
+    border-radius: var(--raio-padrao);
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.alerta-erro, .alerta-alerta {
+    background-color: rgba(255, 99, 71, 0.1);
+    color: #ff6347;
+    border: 1px solid #ff6347;
+}
+
+.alerta-sucesso {
+    background-color: rgba(74, 222, 128, 0.1);
+    color: var(--verde-resolvido);
+    border: 1px solid var(--verde-resolvido);
+}

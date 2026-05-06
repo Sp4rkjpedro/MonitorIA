@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="conteudo">
+    <div class="dashboard-header">
+        <h1 class="titulo-pagina">Olá, {{ nome }}! 👋</h1>
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-logout">Sair da Conta</a>
+    </div>
+
+    <!-- Comportamento condicional baseado no tipo de usuário -->
+    {% if papel == 'monitor' %}
+        <div class="box-ia corpo-ia" style="background-color: #1e3a8a; border-color: #3b82f6;">
+            <div class="header-ia">🛡️ Painel do Monitor</div>
+            <p>Você tem <strong>12 perguntas</strong> aguardando verificação humana hoje.</p>
+            <a href="#" class="btn btn-roxo" style="margin-top: 1rem;">Verificar Respostas da IA</a>
+        </div>
+    {% else %}
+        <div class="box-ia corpo-ia">
+            <div class="header-ia">📚 Painel do Aluno</div>
+            <p>Pronto para aprender? Faça uma pergunta para a comunidade ou para nossa IA.</p>
+            <a href="{{ url_for('fazer_pergunta') }}" class="btn btn-roxo" style="margin-top: 1rem;">+ Nova Pergunta</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -18,8 +18,18 @@
                 </nav>
             </div>
             <div class="header-acoes">
-                <a href="{{ url_for('fazer_pergunta') }}" class="btn btn-roxo">+ Nova Pergunta</a>
-                <div class="user-badge" title="Usuário Logado">JP</div>
+                {% if session.get('usuario_id') %}
+                    <!-- Usuário Logado -->
+                    <a href="{{ url_for('fazer_pergunta') }}" class="btn btn-roxo">+ Nova Pergunta</a>
+                    <a href="{{ url_for('auth.dashboard') }}" class="user-badge" title="Meu Painel">
+                         {{ session.get('usuario_nome')[:2] | upper }}
+                    </a>
+                    <a href="{{ url_for('auth.logout') }}" style="margin-left: 10px; color: var(--laranja-alerta); font-size: 0.8rem;">Sair</a>
+                {% else %}
+                    <!-- Usuário Deslogado -->
+                    <a href="{{ url_for('auth.login') }}" class="btn" style="color: white;">Entrar</a>
+                    <a href="{{ url_for('auth.cadastro') }}" class="btn btn-roxo">Cadastrar</a>
+                {% endif %}
             </div>
         </div>
     </header>
@@ -46,6 +56,17 @@
             </aside>
 
             <section class="conteudo">
+                <!-- Bloco para Mensagens de Feedback -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alerta alerta-{{ category }}" style="margin-bottom: 20px; padding: 10px; border-radius: 5px; border: 1px solid;">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
                 {% block content %}{% endblock %}
             </section>
         </main>

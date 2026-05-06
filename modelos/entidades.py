@@ -7,6 +7,7 @@ class Usuario(banco.Model):
     id = banco.Column(banco.Integer, primary_key=True)
     nome = banco.Column(banco.String(100), nullable=False)
     email = banco.Column(banco.String(100), unique=True, nullable=False)
+    senha_hash = banco.Column(banco.String(256), nullable=False) # Novo campo
     papel = banco.Column(banco.String(20), nullable=False) # 'aluno' ou 'monitor'
 
 class Pergunta(banco.Model):
