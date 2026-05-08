@@ -10,14 +10,20 @@
     {% if papel == 'monitor' %}
         <div class="box-ia corpo-ia" style="background-color: #1e3a8a; border-color: #3b82f6;">
             <div class="header-ia">🛡️ Painel do Monitor</div>
-            <p>Você tem <strong>12 perguntas</strong> aguardando verificação humana hoje.</p>
-            <a href="#" class="btn btn-roxo" style="margin-top: 1rem;">Verificar Respostas da IA</a>
+                <p style="margin: 15px 0;">
+                    Você tem <strong>{{ contagem_pendentes }} perguntas</strong> aguardando verificação humana hoje.
+                </p>
+                <!-- Botão linkado para a página principal de perguntas -->
+                <a href="{{ url_for('perguntas.base') }}" class="btn btn-roxo" style="display: inline-block; text-decoration: none; text-align: center;">
+                    Verificar Respostas da IA
+                </a>
+            </div>
         </div>
     {% else %}
         <div class="box-ia corpo-ia">
             <div class="header-ia">📚 Painel do Aluno</div>
             <p>Pronto para aprender? Faça uma pergunta para a comunidade ou para nossa IA.</p>
-            <a href="{{ url_for('fazer_pergunta') }}" class="btn btn-roxo" style="margin-top: 1rem;">+ Nova Pergunta</a>
+            <a href="{{ url_for('perguntas.fazer_pergunta') }}" class="btn btn-roxo" style="margin-top: 1rem;">+ Nova Pergunta</a>
         </div>
     {% endif %}
 </div>

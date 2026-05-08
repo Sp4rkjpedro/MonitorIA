@@ -31,5 +31,5 @@ class Resposta(banco.Model):
     pergunta_id = banco.Column(banco.Integer, banco.ForeignKey('perguntas.id'), nullable=False)
     usuario_id = banco.Column(banco.Integer, banco.ForeignKey('usuarios.id'), nullable=True) # Nulo se for a IA
     eh_ia = banco.Column(banco.Boolean, default=False)
-    eh_solucao = banco.Column(banco.Boolean, default=False)
+    solucao = banco.Column(banco.Boolean, default=False)
     data_criacao = banco.Column(banco.DateTime, default=datetime.utcnow)

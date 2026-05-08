@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from functools import wraps
+from modelos.entidades import Pergunta, Resposta
 from servicos.servico_autenticacao import ServicoAutenticacao
 from repositorios.repositorio_usuario import RepositorioUsuario
 
@@ -63,6 +64,8 @@ def logout():
 @login_obrigatorio
 def dashboard():
     # Passamos os dados da sessão para o template saber quem está logado
+    perguntas_pendentes = Pergunta.query.filter(~Pergunta.respostas.any(Resposta.solucao == True)).count()
     return render_template('dashboard.html', 
                            nome=session.get('usuario_nome'), 
-                           papel=session.get('usuario_papel'))
+                           papel=session.get('usuario_papel'),
+                           contagem_pendentes=perguntas_pendentes)

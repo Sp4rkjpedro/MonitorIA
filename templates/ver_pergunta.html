@@ -1,73 +1,53 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="page-top">
-    <div>
-        <h1 class="titulo-pagina">{{ pergunta.titulo }}</h1>
-        <span class="subtitulo">{{ pergunta.disciplina }}</span>
-    </div>
-    <a href="{{ url_for('base') }}" class="btn btn-secundario">← Voltar</a>
+<!-- Box da Pergunta do Aluno -->
+<div class="box-ia" style="border-left: 4px solid #4a5568;">
+    <h2 style="color: white; margin-bottom: 5px;">{{ pergunta.titulo }}</h2>
+    <span class="badge" style="margin-bottom: 15px; display: inline-block;">{{ pergunta.disciplina }}</span>
+    <p style="color: #e2e8f0; line-height: 1.6;">{{ pergunta.corpo }}</p>
 </div>
 
-<div class="pergunta-container">
-    <div class="pergunta-header">
-        <div class="header-meta">
-            <span class="badge badge-roxo">{{ pergunta.disciplina }}</span>
-            {# Verifica se alguma resposta foi marcada como solução #}
-            {% if pergunta.respostas | selectattr('eh_solucao') | list | length > 0 %}
-                <span class="badge badge-resolvida">✓ Resolvida</span>
+<h3 style="margin-top: 30px; margin-bottom: 15px; color: white;">Respostas</h3>
+
+<!-- Lista de Respostas (IA e outros) -->
+{% if pergunta.respostas %}
+    {% for resposta in pergunta.respostas %}
+        
+        <!-- Destaque verde se for a solução validada -->
+        <div class="box-ia {% if resposta.solucao %}solucao-destaque{% endif %}" style="margin-bottom: 20px;">
+            <div class="header-ia" style="display: flex; justify-content: space-between; margin-bottom: 15px; color: #a0aec0; font-weight: bold;">
+                <span>
+                    {% if resposta.eh_ia %} 🤖 IA Assistente {% else %} 👤 Aluno {% endif %}
+                </span>
+                
+                {% if resposta.solucao %} 
+                    <span style="color: #4ade80;">✅ Solução Validada pelo Monitor</span> 
+                {% endif %}
+            </div>
+            
+            <p style="color: #e2e8f0; line-height: 1.6;">{{ resposta.corpo }}</p>
+
+            <!-- AÇÕES DO MONITOR: Só aparece se for monitor e a resposta ainda não for a solução -->
+            {% if session.get('usuario_papel') == 'monitor' and not resposta.solucao %}
+                <hr style="border-color: #2d3748; margin: 15px 0;">
+                <form action="{{ url_for('perguntas.marcar_solucao', id=resposta.id) }}" method="POST">
+                    <button type="submit" class="btn btn-roxo" style="width: 100%;">
+                        ⭐ Validar como Melhor Resposta
+                    </button>
+                </form>
             {% endif %}
         </div>
-        <p class="pergunta-info">
-            Publicado por Aluno #{{ pergunta.usuario_id }} em {{ pergunta.data_criacao.strftime('%d/%m/%Y às %H:%M') }}
-        </p>
-    </div>
-
-    <div class="pergunta-corpo">
-        {{ pergunta.corpo }}
-    </div>
-
-    <hr class="divisor">
-
-    {# Buscamos a resposta que foi marcada como vinda da IA #}
-    {% set resposta_ia = pergunta.respostas | selectattr('eh_ia', 'equalto', True) | first %}
-    
-    <div class="box-ia corpo-ia">
-        <div class="header-ia">
-            <span class="icone-ia">🤖</span> 
-            <strong>Monitor Virtual (Llama-3 via Groq)</strong>
-        </div>
         
-        {% if resposta_ia %}
-            <div class="conteudo-ia">
-                {{ resposta_ia.corpo }}
-            </div>
-            <div class="alerta-verificacao">
-                ⚠️ Resposta automática para auxílio rápido. Aguarde a validação de um monitor humano.
-            </div>
-        {% else %}
-            <div class="processando-ia">
-                <p>O Monitor Virtual está analisando sua pergunta e gerando uma explicação...</p>
-            </div>
-        {% endif %}
+    {% endfor %}
+{% else %}
+    <div class="box-ia" style="text-align: center; color: #a0aec0;">
+        <p>Ainda não há respostas para esta pergunta. A IA está gerando a solução...</p>
     </div>
+{% endif %}
 
-    <div class="respostas-comunidade">
-        <h3>💬 {{ pergunta.respostas | rejectattr('eh_ia') | list | length }} Respostas da Comunidade</h3>
-        
-        {% for resposta in pergunta.respostas if not resposta.eh_ia %}
-            <div class="card-resposta {% if resposta.eh_solucao %}solucao{% endif %}">
-                <div class="resposta-header">
-                    <strong>Monitor/Aluno #{{ resposta.usuario_id }}</strong>
-                    <span>{{ resposta.data_criacao.strftime('%d/%m/%Y') }}</span>
-                </div>
-                <div class="resposta-corpo">
-                    {{ resposta.corpo }}
-                </div>
-            </div>
-        {% else %}
-            <p class="sem-respostas">Nenhum monitor humano respondeu ainda.</p>
-        {% endfor %}
-    </div>
+<!-- Botão de Voltar -->
+<div style="margin-top: 20px;">
+    <a href="{{ url_for('perguntas.base') }}" style="color: var(--roxo-principal); text-decoration: none;">&larr; Voltar para as perguntas</a>
 </div>
 {% endblock %}

@@ -1,6 +1,4 @@
-/* static/css/estilos.css */
-
-/* --- VARIÁVEIS DE COR (Inspiradas nas imagens) --- */
+/* --- VARIÁVEIS DE COR --- */
 :root {
     --bg-fundo: #12141a;
     --bg-card: #1c1e26;
@@ -172,7 +170,7 @@ nav a.active, nav a:hover {
     margin-bottom: 2rem;
 }
 
-/* --- FORMULÁRIOS (image_0.png) --- */
+/* --- FORMULÁRIOS --- */
 .form-pergunta {
     display: flex;
     flex-direction: column;
@@ -250,7 +248,7 @@ nav a.active, nav a:hover {
     border-radius: 4px;
 }
 
-/* --- DETECÇÃO DE DUPLICATAS (image_0.png) --- */
+/* --- DETECÇÃO DE DUPLICATAS  --- */
 .duplicatas {
     margin-top: 1rem;
     display: flex;
@@ -447,7 +445,7 @@ nav a.active, nav a:hover {
     border: 1px solid var(--verde-resolvido);
 }
 
-/* --- VISUALIZAÇÃO DA PERGUNTA (image_1.png) --- */
+/* --- VISUALIZAÇÃO DA PERGUNTA  --- */
 .pergunta-header {
     margin-bottom: 1.5rem;
 }
@@ -475,7 +473,6 @@ code {
     font-family: 'Consolas', 'Monaco', monospace;
 }
 
-/* static/css/estilos.css (Adições) */
 
 .auth-container {
     max-width: 500px;
@@ -531,4 +528,11 @@ code {
     background-color: rgba(74, 222, 128, 0.1);
     color: var(--verde-resolvido);
     border: 1px solid var(--verde-resolvido);
+}
+
+/* Borda e sombra verde para a resposta marcada como correta */
+.solucao-destaque {
+    border: 2px solid #4ade80 !important;
+    background-color: rgba(74, 222, 128, 0.05) !important;
+    box-shadow: 0 0 15px rgba(74, 222, 128, 0.1);
 }

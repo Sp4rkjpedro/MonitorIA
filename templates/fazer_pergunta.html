@@ -6,7 +6,7 @@
     <p class="subtitulo">Preencha os campos abaixo para receber auxílio dos monitores e da nossa IA.</p>
 </div>
 
-<form class="form-pergunta" action="{{ url_for('fazer_pergunta') }}" method="post">
+<form class="form-pergunta" action="{{ url_for('perguntas.fazer_pergunta') }}" method="post">
     
     <div class="form-grupo">
         <label for="titulo">Título da Pergunta</label>
@@ -50,7 +50,7 @@
 
     <div class="form-acoes">
         <button type="submit" class="btn btn-roxo">🚀 Publicar Pergunta</button>
-        <a href="{{ url_for('base') }}" class="btn btn-link">Cancelar</a>
+        <a href="{{ url_for('perguntas.base') }}" class="btn btn-link">Cancelar</a>
     </div>
 
 </form>

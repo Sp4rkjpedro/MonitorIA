@@ -13,21 +13,39 @@
                 <div class="logo"><span class="logo-m">M</span> MonitorIA</div>
                 <nav>
                     <ul>
-                        <li><a href="{{ url_for('base') }}" class="active">Perguntas</a></li>
-                        </ul>
+                        <li><a href="{{ url_for('perguntas.base') }}">Perguntas</a></li>
+                        
+                        <!-- Aparece APENAS para Alunos -->
+                        {% if session.get('usuario_papel') == 'aluno' %}
+                            <li><a href="{{ url_for('perguntas.minhas_perguntas') }}">Minhas Dúvidas</a></li>
+                        {% endif %}
+                    </ul>
                 </nav>
             </div>
+            
             <div class="header-acoes">
                 {% if session.get('usuario_id') %}
-                    <!-- Usuário Logado -->
-                    <a href="{{ url_for('fazer_pergunta') }}" class="btn btn-roxo">+ Nova Pergunta</a>
+                    <!-- INÍCIO: Ações para Usuário Logado -->
+                    
+                    <!-- Botão de Nova Pergunta APENAS para Alunos -->
+                    {% if session.get('usuario_papel') == 'aluno' %}
+                        <a href="{{ url_for('perguntas.fazer_pergunta') }}" class="btn btn-roxo">+ Nova Pergunta</a>
+                    {% else %}
+                        <!-- Tag indicando que é um monitor logado -->
+                        <span style="color: var(--roxo-principal); margin-right: 15px; font-weight: bold; font-size: 0.9rem;">
+                            🛡️ MODO MONITOR
+                        </span>
+                    {% endif %}
+                    
                     <a href="{{ url_for('auth.dashboard') }}" class="user-badge" title="Meu Painel">
                          {{ session.get('usuario_nome')[:2] | upper }}
                     </a>
-                    <a href="{{ url_for('auth.logout') }}" style="margin-left: 10px; color: var(--laranja-alerta); font-size: 0.8rem;">Sair</a>
+                    
+                    <a href="{{ url_for('auth.logout') }}" style="margin-left: 10px; color: var(--laranja-alerta); font-size: 0.8rem; text-decoration: none;">Sair</a>
+                    
                 {% else %}
-                    <!-- Usuário Deslogado -->
-                    <a href="{{ url_for('auth.login') }}" class="btn" style="color: white;">Entrar</a>
+                    <!-- INÍCIO: Ações para Usuário Deslogado -->
+                    <a href="{{ url_for('auth.login') }}" class="btn" style="color: white; text-decoration: none;">Entrar</a>
                     <a href="{{ url_for('auth.cadastro') }}" class="btn btn-roxo">Cadastrar</a>
                 {% endif %}
             </div>
@@ -67,6 +85,7 @@
                     {% endif %}
                 {% endwith %}
                 
+                <!-- Aqui o Flask injeta o conteúdo das outras páginas -->
                 {% block content %}{% endblock %}
             </section>
         </main>
