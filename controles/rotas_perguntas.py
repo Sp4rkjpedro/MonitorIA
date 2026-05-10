@@ -1,102 +1,90 @@
-import threading
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session, flash
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from servicos.servico_pergunta import ServicoPergunta
 from repositorios.repositorio_pergunta import RepositorioPergunta
 from servicos.servico_ia import ServicoIA
 from repositorios.repositorio_resposta import RepositorioResposta
 
-# Criação do Blueprint
+# Inicialização do Blueprint e dos Serviços
 blueprint_perguntas = Blueprint('perguntas', __name__)
 
-# Instanciando os serviços que esta controladora vai usar
-servico = ServicoPergunta(RepositorioPergunta())
-servico_ia = ServicoIA(RepositorioResposta())
+repo_pergunta = RepositorioPergunta()
+repo_resposta = RepositorioResposta()
+
+servico = ServicoPergunta(repo_pergunta)
+servico_ia = ServicoIA(repo_resposta)
 
 @blueprint_perguntas.route('/')
 def base():
-    """Página inicial com lista de perguntas."""
-    lista_de_perguntas = servico.listar_todas()
+    """Lista todas as perguntas na home."""
     return render_template('home.html', 
-                           perguntas=lista_de_perguntas, 
+                           perguntas=servico.listar_todas(), 
                            disciplinas=servico.listar_disciplinas())
 
 @blueprint_perguntas.route('/perguntas/nova', methods=['GET', 'POST'])
 def fazer_pergunta():
-    """Criação de nova pergunta com IA em segundo plano."""
+    """Cria nova pergunta com validação de duplicatas via IA."""
     if 'usuario_id' not in session:
-        flash("Você precisa estar logado para fazer uma pergunta.", "alerta")
         return redirect(url_for('auth.login'))
 
-    disciplinas = servico.listar_disciplinas()
-    
     if request.method == 'POST':
+        titulo = request.form.get('titulo', '').strip()
+        
+        # DEBUG NO TERMINAL PARA A APRESENTAÇÃO
+        print("\n" + "="*40)
+        print(f"SISTEMA IA: ANALISANDO DUPLICATA")
+        print(f"TITULO ENVIADO: {titulo}")
+        
+        todas = servico.listar_todas()
+        duplicatas = servico_ia.buscar_duplicatas(titulo, todas)
+        
+        print(f"RESULTADO DA IA: {duplicatas}")
+        print("="*40 + "\n")
+
+        if duplicatas:
+            flash(f"Pergunta similar encontrada no ID {duplicatas[0].id}", "perigo")
+            return render_template('fazer_pergunta.html', 
+                                 erro="Duplicata", 
+                                 duplicata=duplicatas[0], 
+                                 disciplinas=servico.listar_disciplinas())
+
         dados = {
-            'titulo': request.form.get('titulo', '').strip(),
+            'titulo': titulo,
             'corpo': request.form.get('corpo', '').strip(),
             'disciplina': request.form.get('disciplina', '').strip(),
-            'usuario_id': session.get('usuario_id') # Usando o usuário real da sessão
+            'usuario_id': session.get('usuario_id')
         }
-        try:
-            pergunta = servico.criar_pergunta(dados)
-            
-            # IA em background
-            threading.Thread(target=servico_ia.gerar_resposta_monitor, args=(pergunta,)).start()
-            
-            return redirect(url_for('perguntas.ver_pergunta', id=pergunta.id))
-        except ValueError as error:
-            return render_template('fazer_pergunta.html', disciplinas=disciplinas, erro=str(error), form=dados)
+        pergunta = servico.criar_pergunta(dados)
+        return redirect(url_for('perguntas.ver_pergunta', id=pergunta.id))
     
-    return render_template('fazer_pergunta.html', disciplinas=disciplinas)
+    return render_template('fazer_pergunta.html', disciplinas=servico.listar_disciplinas())
 
 @blueprint_perguntas.route('/perguntas/<int:id>')
 def ver_pergunta(id):
-    """Visualização de detalhes de uma pergunta específica."""
-    try:
-        return render_template('ver_pergunta.html', 
-                               pergunta=servico.buscar_detalhes(id), 
-                               disciplinas=servico.listar_disciplinas())
-    except ValueError:
-        return "Pergunta não encontrada", 404
+    """Exibe os detalhes de uma pergunta e suas respostas."""
+    return render_template('ver_pergunta.html', 
+                           pergunta=servico.buscar_detalhes(id), 
+                           disciplinas=servico.listar_disciplinas())
 
 @blueprint_perguntas.route('/minhas-perguntas')
 def minhas_perguntas():
-    """Lista as perguntas do usuário logado."""
+    """Filtra perguntas apenas do usuário logado."""
     if 'usuario_id' not in session:
-        flash("Faça login para ver suas perguntas.", "alerta")
         return redirect(url_for('auth.login'))
 
     usuario_id_atual = session.get('usuario_id')
     todas = servico.listar_todas()
     minhas = [p for p in todas if p.usuario_id == usuario_id_atual]
     
-    return render_template('minhas_perguntas.html', perguntas=minhas, disciplinas=servico.listar_disciplinas())
+    return render_template('minhas_perguntas.html', 
+                           perguntas=minhas, 
+                           disciplinas=servico.listar_disciplinas())
 
-@blueprint_perguntas.route('/api/checar-duplicatas', methods=['POST'])
-def api_duplicatas():
-    """Endpoint para busca de duplicatas via IA"""
-    dados = request.get_json()
-    titulo = dados.get('titulo', '')
-    todas_perguntas = servico.listar_todas()
+@blueprint_perguntas.route('/debug/analisar/<int:id>')
+def debug_ia_respostas(id):
+    p = servico.buscar_detalhes(id)
+    # Chama a sua lógica de juíza
+    melhor_id = servico_ia.analisar_melhor_resposta(p, p.respostas)
     
-    duplicatas = servico_ia.buscar_duplicatas(titulo, todas_perguntas)
-    resultado = [{"id": p.id, "titulo": p.titulo} for p in duplicatas]
-    return jsonify({"duplicatas": resultado})
-
-@blueprint_perguntas.route('/respostas/<int:id>/solucao', methods=['POST'])
-def marcar_solucao(id):
-    """Marca uma resposta como a solução da dúvida"""
-    if session.get('usuario_papel') != 'monitor':
-        flash("Apenas monitores podem marcar a melhor resposta.", "erro")
-        return redirect(request.referrer)
-
-    from modelos.entidades import Resposta
-    from extensoes import banco
-    
-    resposta = Resposta.query.get_or_404(id)
-    Resposta.query.filter_by(pergunta_id=resposta.pergunta_id).update({"solucao": False})
-    
-    resposta.solucao = True
-    banco.session.commit()
-
-    flash("Resposta validada como Solução Correta!", "sucesso")
-    return redirect(url_for('perguntas.ver_pergunta', id=resposta.pergunta_id))
+    if melhor_id:
+        return f"A IA analisou {len(p.respostas)} respostas e indica que a melhor é o ID: {melhor_id}"
+    return "A IA não encontrou uma resposta satisfatória ou não há respostas."
