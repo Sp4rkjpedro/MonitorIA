@@ -1,30 +1,26 @@
 {% extends 'base.html' %}
+
 {% block content %}
 <div class="auth-container box-ia">
     <h2 class="titulo-pagina">Crie sua conta</h2>
-    
-    <!-- Exibição de Mensagens Flash -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          <div class="alerta alerta-{{ category }}">{{ message }}</div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
 
     <form method="POST" action="{{ url_for('auth.cadastro') }}" class="form-pergunta">
+        
         <div class="form-grupo">
             <label for="nome">Nome Completo</label>
             <input type="text" id="nome" name="nome" class="form-control" required>
         </div>
+
         <div class="form-grupo">
             <label for="email">E-mail Acadêmico</label>
             <input type="email" id="email" name="email" class="form-control" required>
         </div>
+
         <div class="form-grupo">
             <label for="senha">Senha</label>
             <input type="password" id="senha" name="senha" class="form-control" required>
         </div>
+
         <div class="form-grupo">
             <label for="papel">Eu sou um(a):</label>
             <select id="papel" name="papel" class="form-control" required>
@@ -32,8 +28,14 @@
                 <option value="monitor">Monitor (Ajudando Alunos)</option>
             </select>
         </div>
+
         <button type="submit" class="btn btn-roxo">Cadastrar</button>
     </form>
-    <p class="auth-link">Já tem uma conta? <a href="{{ url_for('auth.login') }}">Faça login aqui</a>.</p>
+
+    <p class="auth-link">
+        Já tem uma conta?
+        <a href="{{ url_for('auth.login') }}">Faça login aqui</a>.
+    </p>
 </div>
+
 {% endblock %}

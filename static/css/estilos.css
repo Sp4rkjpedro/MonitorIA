@@ -511,7 +511,7 @@ code {
 }
 
 /* Sistema de Alertas (Flash Messages) */
-.alerta {
+/* .alerta {
     padding: 1rem;
     border-radius: var(--raio-padrao);
     margin-bottom: 1.5rem;
@@ -528,11 +528,71 @@ code {
     background-color: rgba(74, 222, 128, 0.1);
     color: var(--verde-resolvido);
     border: 1px solid var(--verde-resolvido);
-}
+} */
 
 /* Borda e sombra verde para a resposta marcada como correta */
 .solucao-destaque {
     border: 2px solid #4ade80 !important;
     background-color: rgba(74, 222, 128, 0.05) !important;
     box-shadow: 0 0 15px rgba(74, 222, 128, 0.1);
+}
+
+/* Notificação Flutuante */
+.notificacao {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background-color: var(--verde-resolvido);
+    color: #ffffff;
+    padding: 1rem 2rem;
+    border-radius: var(--raio-padrao);
+    box-shadow: 0 6px 20px rgba(74, 222, 128, 0.4);
+    font-weight: 600;
+    z-index: 9999;
+    transition: all 0.3s ease-in-out;
+    max-width: 90%;
+    text-align: center;
+}
+
+.notificacao.visivel {
+    transform: translateX(-50%) translateY(0);
+    animation: entradaCima 0.3s ease-out;
+}
+
+.notificacao.oculto {
+    animation: saidaCima 0.3s ease-out forwards;
+}
+
+/* Variações de Notificação por Categoria */
+.notificacao-sucesso {
+    background-color: var(--verde-resolvido);
+    box-shadow: 0 6px 20px rgba(74, 222, 128, 0.3);
+}
+
+.notificacao-erro, .notificacao-alerta {
+    background-color: #ff6347;
+    box-shadow: 0 6px 20px rgba(255, 99, 71, 0.3);
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+@keyframes slideOutUp {
+    from {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-100px);
+    }
 }

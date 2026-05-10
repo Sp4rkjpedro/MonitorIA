@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MonitorIA - Assistente Acadêmico</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+    <script src="{{ url_for('static', filename='js/notificacao.js') }}" defer></script>
 </head>
 <body>
     <header>
@@ -50,6 +51,17 @@
                 {% endif %}
             </div>
         </div>
+
+         {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                           <div class="notificacao notificacao-{{ category }} visivel">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
     </header>
 
     <div class="container">
@@ -75,17 +87,6 @@
 
             <section class="conteudo">
                 <!-- Bloco para Mensagens de Feedback -->
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                            <div class="alerta alerta-{{ category }}" style="margin-bottom: 20px; padding: 10px; border-radius: 5px; border: 1px solid;">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
-                
-                <!-- Aqui o Flask injeta o conteúdo das outras páginas -->
                 {% block content %}{% endblock %}
             </section>
         </main>
