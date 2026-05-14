@@ -510,25 +510,6 @@ code {
     color: #12141a;
 }
 
-/* Sistema de Alertas (Flash Messages) */
-/* .alerta {
-    padding: 1rem;
-    border-radius: var(--raio-padrao);
-    margin-bottom: 1.5rem;
-    font-weight: 600;
-}
-
-.alerta-erro, .alerta-alerta {
-    background-color: rgba(255, 99, 71, 0.1);
-    color: #ff6347;
-    border: 1px solid #ff6347;
-}
-
-.alerta-sucesso {
-    background-color: rgba(74, 222, 128, 0.1);
-    color: var(--verde-resolvido);
-    border: 1px solid var(--verde-resolvido);
-} */
 
 /* Borda e sombra verde para a resposta marcada como correta */
 .solucao-destaque {
