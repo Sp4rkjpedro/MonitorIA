@@ -11,19 +11,15 @@
                 <h3><a href="{{ url_for('perguntas.ver_pergunta', id=pergunta.id) }}" style="color: white; text-decoration: none;">{{ pergunta.titulo }}</a></h3>
                 <span class="badge">{{ pergunta.disciplina }}</span>
                 
-                <div style="margin-top: 15px; font-size: 0.9em;">
-                    Status: 
-                    {% set resolvida = false %}
-                    {% for r in pergunta.respostas %}
-                        {% if r.solucao %} {% set resolvida = true %} {% endif %}
-                    {% endfor %}
-
-                    {% if resolvida %}
-                        <span style="color: #4ade80;">✅ Resolvida</span>
-                    {% else %}
-                        <span style="color: #fbbf24;">⏳ Aguardando Monitor</span>
-                    {% endif %}
-                </div>
+                <div style="font-size: 0.9rem;">
+                {% set resolvida = pergunta.respostas | selectattr('solucao', 'equalto', true) | list | length > 0 %}
+                
+                {% if resolvida %}
+                    <span style="color: #4ade80; font-weight: bold;">✅ Status: Resolvida</span>
+                {% else %}
+                    <span style="color: var(--laranja-alerta); font-weight: bold;">⏳ Status: Aguardando Monitor</span>
+                {% endif %}
+            </div>
             </div>
         {% endfor %}
     {% else %}

@@ -8,6 +8,7 @@ from flask import Flask
 from extensoes import banco
 from controles.rotas_perguntas import blueprint_perguntas
 from controles.rotas_autenticacao import blueprint_auth
+from controles.rotas_respostas import blueprint_respostas
 
 def criar_app() -> Flask:
     app = Flask(__name__)
@@ -22,6 +23,7 @@ def criar_app() -> Flask:
 
     # Registro das Rotas (Blueprints)
     app.register_blueprint(blueprint_perguntas)
+    app.register_blueprint(blueprint_respostas)
     app.register_blueprint(blueprint_auth)
 
     # Contexto do App para criar tabelas e dados iniciais

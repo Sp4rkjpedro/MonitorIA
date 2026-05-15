@@ -577,3 +577,22 @@ code {
         transform: translateX(-50%) translateY(-100px);
     }
 }
+
+.solucao-destaque {
+    border: 1px solid #4ade80 !important;
+    background-color: rgba(74, 222, 128, 0.03) !important;
+}
+.btn-feedback {
+    background: #1a202c;
+    border: 1px solid #2d3748;
+    color: #e2e8f0;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+.btn-feedback:hover {
+    background: #2d3748;
+    border-color: var(--roxo-principal);
+}
