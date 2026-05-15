@@ -1,6 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+    .texto-formatado {
+        white-space: pre-wrap; /* Essencial para respeitar quebras de linha e indentação de código */
+        word-wrap: break-word;
+        font-family: inherit;
+        line-height: 1.6;
+        color: #e2e8f0;
+    }
+    /* Estilização para blocos de código dentro da resposta da IA */
+    .texto-formatado code {
+        background-color: #1a202c;
+        color: #deff9a;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 0.95rem;
+    }
+</style>
+
 <div class="box-ia" style="border-left: 4px solid var(--roxo-principal);">
     <h2 style="color: white; margin-bottom: 5px;">{{ pergunta.titulo }}</h2>
     <span class="badge" style="margin-bottom: 15px; display: inline-block;">{{ pergunta.disciplina }}</span>
@@ -9,11 +28,14 @@
 
 {% for resposta in pergunta.respostas if resposta.eh_ia %}
     <div class="box-ia" style="background-color: rgba(138, 43, 226, 0.05); border: 1px solid var(--roxo-principal); margin-top: 25px;">
-        <div style="color: var(--roxo-principal); font-weight: bold; margin-bottom: 10px;">
+        <div style="color: var(--roxo-principal); font-weight: bold; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
             <span>🤖 Sugestão da MonitorIA</span>
+            <span style="font-size: 0.7rem; background: var(--roxo-principal); color: white; padding: 2px 8px; border-radius: 4px;">IA</span>
         </div>
-        <p style="color: #e2e8f0; line-height: 1.6;">{{ resposta.corpo }}</p>
-        <p style="font-size: 0.8rem; color: #718096; margin-top: 10px;">
+        
+        <div class="texto-formatado">{{ resposta.corpo }}</div>
+        
+        <p style="font-size: 0.8rem; color: #718096; margin-top: 15px; border-top: 1px solid rgba(138, 43, 226, 0.1); padding-top: 10px;">
             *Respostas da IA servem como auxílio imediato. Não recebem likes e não contam como solução oficial.
         </p>
     </div>
@@ -26,9 +48,8 @@
 {% if respostas_humanas %}
     {% for resposta in respostas_humanas %}
         <div class="box-ia {% if resposta.solucao %}solucao-destaque{% endif %}" style="margin-bottom: 20px;">
-            
             <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                <span style="color: #a0aec0; font-weight: bold;">👤 Aluno ou Monitor</span>
+                <span style="color: #a0aec0; font-weight: bold;">👤 Resposta Humana</span>
                 {% if resposta.solucao %} 
                     <span style="color: #4ade80; font-weight: bold;">✅ Solução Oficial</span> 
                 {% endif %}
@@ -38,45 +59,44 @@
 
             <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px;">
                 <form action="{{ url_for('respostas.votar_resposta', id=resposta.id, valor=1) }}" method="POST" style="display: inline;">
-                    <button type="submit" class="btn-feedback" title="Gostei">
-                        👍 <span style="margin-left: 4px;">{{ resposta.total_likes }}</span>
-                    </button>
+                    <button type="submit" class="btn-feedback">👍 {{ resposta.total_likes }}</button>
                 </form>
-                
                 <form action="{{ url_for('respostas.votar_resposta', id=resposta.id, valor=0) }}" method="POST" style="display: inline;">
-                    <button type="submit" class="btn-feedback" title="Não gostei">
-                        👎 <span style="margin-left: 4px;">{{ resposta.total_dislikes }}</span>
-                    </button>
+                    <button type="submit" class="btn-feedback">👎 {{ resposta.total_dislikes }}</button>
                 </form>
             </div>
 
             {% if not resposta.solucao %}
-                {% set eh_autor = (session.get('usuario_id') == pergunta.usuario_id) %}
-                {% set eh_monitor = (session.get('usuario_papel') == 'monitor') %}
-                
-                {% if eh_autor or eh_monitor %}
+                {% set papel = session.get('usuario_id') and (session.get('usuario_papel') or session.get('papel')) %}
+                {% if session.get('usuario_id') == pergunta.usuario_id or papel == 'monitor' %}
                     <hr style="border-color: #2d3748; margin: 15px 0;">
                     <form action="{{ url_for('respostas.definir_solucao', id=resposta.id) }}" method="POST">
-                        <button type="submit" class="btn btn-outline-laranja" style="font-size: 0.85rem; padding: 5px 15px;">
-                            Marcar como Solução Correta
-                        </button>
+                        <button type="submit" class="btn btn-outline-laranja" style="font-size: 0.85rem;">Marcar como Solução</button>
                     </form>
                 {% endif %}
             {% endif %}
         </div>
     {% endfor %}
 {% else %}
-    <p style="color: #a0aec0; text-align: center;">Ainda não há respostas da comunidade.</p>
+    <p style="color: #a0aec0; text-align: center; margin-bottom: 30px;">Ainda não há respostas da comunidade. Seja o primeiro!</p>
 {% endif %}
 
-{% if session.get('usuario_id') and session.get('usuario_papel') == 'aluno' %}
-<div class="box-ia" style="margin-top: 30px;">
-    <h4 style="color: white; margin-bottom: 15px;">Sua Resposta</h4>
-    <form action="{{ url_for('respostas.criar', pergunta_id=pergunta.id) }}" method="POST">
-        <textarea name="corpo" placeholder="Escreva sua explicação aqui..." style="width: 100%; background: #1a202c; border: 1px solid #2d3748; color: white; border-radius: 8px; padding: 15px; min-height: 100px; margin-bottom: 15px;" required></textarea>
-        <button type="submit" class="btn btn-roxo">Enviar Resposta</button>
-    </form>
-</div>
+{% if session.get('usuario_id') %}
+    <div class="box-ia" style="margin-top: 30px; border-top: 2px solid #2d3748; padding-top: 25px;">
+        <h4 style="color: white; margin-bottom: 15px;">Sua Resposta</h4>
+        <form action="{{ url_for('respostas.criar', pergunta_id=pergunta.id) }}" method="POST">
+            <textarea 
+                name="corpo" 
+                placeholder="Escreva sua explicação aqui..." 
+                style="width: 100%; background: #1a202c; border: 1px solid #2d3748; color: white; border-radius: 8px; padding: 15px; min-height: 120px; margin-bottom: 15px;" 
+                required></textarea>
+            <button type="submit" class="btn btn-roxo">Enviar Resposta</button>
+        </form>
+    </div>
+{% else %}
+    <div style="text-align: center; padding: 20px; color: #a0aec0;">
+        <p>Faça <a href="{{ url_for('auth.login') }}" style="color: var(--roxo-principal);">login</a> para responder.</p>
+    </div>
 {% endif %}
 
 <div style="margin-top: 30px;">

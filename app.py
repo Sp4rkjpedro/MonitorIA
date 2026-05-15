@@ -6,9 +6,10 @@ load_dotenv()
 
 from flask import Flask
 from extensoes import banco
+# Importação dos Blueprints
 from controles.rotas_perguntas import blueprint_perguntas
 from controles.rotas_autenticacao import blueprint_auth
-from controles.rotas_respostas import blueprint_respostas
+from controles.rotas_respostas import blueprint_respostas # <--- Adicionado
 
 def criar_app() -> Flask:
     app = Flask(__name__)
@@ -23,8 +24,8 @@ def criar_app() -> Flask:
 
     # Registro das Rotas (Blueprints)
     app.register_blueprint(blueprint_perguntas)
-    app.register_blueprint(blueprint_respostas)
     app.register_blueprint(blueprint_auth)
+    app.register_blueprint(blueprint_respostas) # <--- Adicionado
 
     # Contexto do App para criar tabelas e dados iniciais
     with app.app_context():
@@ -33,6 +34,7 @@ def criar_app() -> Flask:
         
         banco.create_all()
         
+        # Criação do usuário Admin se o banco estiver vazio
         if not Usuario.query.first():
             admin = Usuario(
                 nome='Admin', 
@@ -46,4 +48,5 @@ def criar_app() -> Flask:
     return app
 
 if __name__ == '__main__':
+    # Rodando em modo debug para facilitar o seu desenvolvimento
     criar_app().run(debug=True, port=5000)
