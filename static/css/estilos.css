@@ -596,3 +596,21 @@ code {
     background: #2d3748;
     border-color: var(--roxo-principal);
 }
+
+.texto-formatado {
+    white-space: pre-wrap; /* Essencial para respeitar quebras de linha e indentação de código */
+    word-wrap: break-word;
+    font-family: inherit;
+    line-height: 1.6;
+    color: #e2e8f0;
+}
+
+/* Estilização para blocos de código dentro da resposta da IA */
+.texto-formatado code {
+    background-color: #1a202c;
+    color: #deff9a;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.95rem;
+}
