@@ -2,14 +2,16 @@
 {% block content %}
 <div class="conteudo">
     <div class="dashboard-header">
-        <h1 class="titulo-pagina">Olá, {{ nome }}! 👋</h1>
+        <h1 class="titulo-pagina">Olá, {{ nome }}! <img src="{{ url_for('static', filename='imagens/iconemonitor.png') }}" alt="Monitor IA" class="iconemonitor-ia">
+
+</h1>
         <a href="{{ url_for('auth.logout') }}" class="btn btn-logout">Sair da Conta</a>
     </div>
 
     <!-- Comportamento condicional baseado no tipo de usuário -->
     {% if papel == 'monitor' %}
-        <div class="box-ia corpo-ia" style="background-color: #1e3a8a; border-color: #3b82f6;">
-            <div class="header-ia">🛡️ Painel do Monitor</div>
+        <div class="box-ia corpo-ia" style="background-color: #7139d8; border-color: #7d3bf6;">
+            <div class="header-ia"> <img src="{{ url_for('static', filename='imagens/iconemonitor.png') }}" alt="Monitor IA" class="iconemonitor-ia"> Painel do Monitor</div>
                 <p style="margin: 15px 0;">
                     Você tem <strong>{{ contagem_pendentes }} perguntas</strong> aguardando verificação humana hoje.
                 </p>

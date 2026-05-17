@@ -11,7 +11,8 @@
     <header>
         <div class="container header-top">
             <div class="header-brand">
-                <div class="logo"><span class="logo-m">M</span> MonitorIA</div>
+                <div class="logo"><span class="logo-m"><img src="{{ url_for('static', filename='imagens/monitor-ia.png') }}" alt="Monitor IA" class="iconemonitor-ia">
+            </span> MonitorIA</div>
                 <nav>
                     <ul>
                         <li><a href="{{ url_for('perguntas.base') }}">Perguntas</a></li>
@@ -34,7 +35,7 @@
                     {% else %}
                         <!-- Tag indicando que é um monitor logado -->
                         <span style="color: var(--roxo-principal); margin-right: 15px; font-weight: bold; font-size: 0.9rem;">
-                            🛡️ MODO MONITOR
+                             <img src="{{ url_for('static', filename='imagens/iconemonitor.png') }}" alt="Monitor IA" class="iconemonitor-ia"> MODO MONITOR
                         </span>
                     {% endif %}
                     

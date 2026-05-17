@@ -19,7 +19,7 @@
             <p style="color: #a0aec0; margin-top: 10px;">{{ pergunta.corpo[:120] }}...</p>
             
             <div style="margin-top: 15px; font-size: 0.85rem; color: #718096;">
-                <span>👤 Enviada por: {{ pergunta.usuario.nome if pergunta.usuario else 'Aluno' }}</span>
+                <span>👤 Enviada por: {{ pergunta.usuario.nome if pergunta.usuario else 'Voce' }}</span>
                 <span>💬 {{ pergunta.respostas|length }} respostas</span>
                 {% if session.get('usuario_papel') == 'monitor' %}
                     <a href="{{ url_for('perguntas.ver_pergunta', id=pergunta.id) }}" style="float: right; color: var(--roxo-principal); font-weight: bold; text-decoration: none;">

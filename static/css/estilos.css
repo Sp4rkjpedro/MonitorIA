@@ -10,10 +10,10 @@
     
     --roxo-principal: #6c5ce7;
     --roxo-hover: #5a4bcf;
-    --roxo-badge: #d1b1ff; /* Para o ícone da IA */
+    --roxo-badge: #b593d8; /* Para o ícone da IA */
 
     --verde-resolvido: #4ade80;
-    --laranja-alerta: #ffac33;
+    --laranja-alerta: #d4d236;
 
     --gap-padrao: 1.5rem;
     --raio-padrao: 10px;
@@ -109,12 +109,13 @@ nav a.active, nav a:hover {
 }
 
 .btn-roxo {
-    background-color: var(--roxo-principal);
-    color: #fff;
+    background-color: var(--roxo-badge);
+    color: #682583;
 }
 
 .btn-roxo:hover {
     background-color: var(--roxo-hover);
+    
 }
 
 /* --- SIDEBAR --- */
@@ -223,13 +224,21 @@ nav a.active, nav a:hover {
     font-weight: 600;
 }
 
-.icone-ia {
-    background-color: var(--roxo-badge);
-    color: var(--bg-ia);
-    padding: 0.25rem;
-    border-radius: 4px;
-    font-size: 0.9rem;
+.icone-ia { 
+    width: 40px; 
+    height: 40px; 
+    margin-right: 15px; 
+    flex-shrink: 0;
 }
+
+.iconemonitor-ia { 
+    width: 50px; 
+    height: 50px; 
+    margin-right: 0.1px;  /* era 15px, reduzi para aproximar */
+    flex-shrink: 0;
+    vertical-align: middle;
+}
+
 
 .alerta-verificacao {
     color: var(--laranja-alerta);
