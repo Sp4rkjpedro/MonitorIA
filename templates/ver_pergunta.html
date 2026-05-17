@@ -23,13 +23,15 @@
     </div>
 {% endfor %}
 
-<h3 style="margin-top: 40px; margin-bottom: 20px; color: white;">Respostas da Comunidade</h3>
+<h3 id="respostas-comunidade" style="margin-top: 40px; margin-bottom: 20px; color: white;">
+    Respostas da Comunidade
+</h3>
 
 {% set respostas_humanas = pergunta.respostas | selectattr('eh_ia', 'equalto', false) | list %}
 
 {% if respostas_humanas %}
     {% for resposta in respostas_humanas %}
-        <div class="box-ia {% if resposta.solucao %}solucao-destaque{% endif %}" style="margin-bottom: 20px;">
+        <div id="resposta-{{ resposta.id }}" class="box-ia {% if resposta.solucao %}solucao-destaque{% endif %}" style="margin-bottom: 20px;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                 <span style="color: #a0aec0; font-weight: bold;">👤 Resposta Humana</span>
                 {% if resposta.solucao %} 
@@ -40,12 +42,18 @@
             <p style="color: #e2e8f0; line-height: 1.6; margin-bottom: 15px;">{{ resposta.corpo }}</p>
 
             <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px;">
-                <form action="{{ url_for('respostas.votar_resposta', id=resposta.id, valor=1) }}" method="POST" style="display: inline;">
-                    <button type="submit" class="btn-feedback">👍 {{ resposta.total_likes }}</button>
-                </form>
-                <form action="{{ url_for('respostas.votar_resposta', id=resposta.id, valor=0) }}" method="POST" style="display: inline;">
-                    <button type="submit" class="btn-feedback">👎 {{ resposta.total_dislikes }}</button>
-                </form>
+                <button 
+                    class="btn-feedback btn-votar" 
+                    data-id="{{ resposta.id }}" 
+                    data-valor="1">
+                    👍 <span id="likes-{{ resposta.id }}">{{ resposta.total_likes }}</span>
+                </button>
+                <button 
+                    class="btn-feedback btn-votar" 
+                    data-id="{{ resposta.id }}" 
+                    data-valor="0">
+                    👎 <span id="dislikes-{{ resposta.id }}">{{ resposta.total_dislikes }}</span>
+                </button>
             </div>
 
             {% if not resposta.solucao %}
@@ -66,7 +74,7 @@
 {% if session.get('usuario_id') %}
     <div class="box-ia" style="margin-top: 30px; border-top: 2px solid #2d3748; padding-top: 25px;">
         <h4 style="color: white; margin-bottom: 15px;">Sua Resposta</h4>
-        <form action="{{ url_for('respostas.criar', pergunta_id=pergunta.id) }}" method="POST">
+       <form action="{{ url_for('respostas.criar', pergunta_id=pergunta.id) }}" method="POST">
             <textarea 
                 name="corpo" 
                 placeholder="Escreva sua explicação aqui..." 
@@ -84,4 +92,6 @@
 <div style="margin-top: 30px;">
     <a href="{{ url_for('perguntas.base') }}" style="color: var(--roxo-principal); text-decoration: none;">&larr; Voltar para as perguntas</a>
 </div>
+
+<script src="{{ url_for('static', filename='js/votos.js') }}"></script>
 {% endblock %}

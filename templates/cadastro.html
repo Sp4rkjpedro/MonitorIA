@@ -18,7 +18,29 @@
 
         <div class="form-grupo">
             <label for="senha">Senha</label>
-            <input type="password" id="senha" name="senha" class="form-control" required>
+            <div class="campo-senha">
+                <input type="password" id="senha" name="senha" class="form-control" required>
+                <button type="button" class="btn-olho" onclick="alternarSenha('senha', this)" aria-label="Mostrar senha">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="form-grupo">
+            <label for="confirmar_senha">Confirmar Senha</label>
+            <div class="campo-senha">
+                <input type="password" id="confirmar_senha" name="confirmar_senha" class="form-control" required>
+                <button type="button" class="btn-olho" onclick="alternarSenha('confirmar_senha', this)" aria-label="Mostrar senha">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                </button>
+            </div>
+            <small id="msg-senha" style="display:none; margin-top: 5px; font-weight: 600;"></small>
         </div>
 
         <div class="form-grupo">
@@ -38,4 +60,5 @@
     </p>
 </div>
 
+<script src="{{ url_for('static', filename='js/cadastro.js') }}"></script>
 {% endblock %}

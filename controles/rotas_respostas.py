@@ -1,4 +1,4 @@
-from flask import Blueprint, request, redirect, url_for, session, flash
+from flask import Blueprint, request, redirect, url_for, session, flash, jsonify
 from modelos.entidades import Resposta, Voto
 from extensoes import banco
 
@@ -19,7 +19,7 @@ def criar(pergunta_id):
     
     banco.session.add(nova_resposta)
     banco.session.commit()
-    return redirect(url_for('perguntas.ver_pergunta', id=pergunta_id))
+    return redirect(url_for('perguntas.ver_pergunta', id=pergunta_id) + f'#resposta-{nova_resposta.id}')
 
 @blueprint_respostas.route('/respostas/<int:id>/solucao', methods=['POST'])
 def definir_solucao(id):
@@ -52,21 +52,27 @@ def definir_solucao(id):
     banco.session.commit()
     
     flash("Solução validada com sucesso!", "sucesso")
-    return redirect(url_for('perguntas.ver_pergunta', id=resposta.pergunta_id))
+    return redirect(url_for('perguntas.ver_pergunta', id=resposta.pergunta_id) + f'#resposta-{resposta.id}')
 
 @blueprint_respostas.route('/respostas/<int:id>/votar/<int:valor>', methods=['POST'])
 def votar_resposta(id, valor):
+    eh_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+
+    print(f">>> ROTA CHAMADA | id={id} valor={valor} | AJAX={eh_ajax}")
+
     if 'usuario_id' not in session:
+        if eh_ajax:
+            return jsonify({'sucesso': False, 'mensagem': 'Faça login para votar.'})
         flash("Faça login para votar.", "erro")
         return redirect(url_for('auth.login'))
 
-    # Se o valor for 1, continua 1 (Upvote). Se for 0 (ou menor), vira -1 (Downvote)
     valor_voto = 1 if valor == 1 else -1
-    
     usuario_id = session.get('usuario_id')
-    resposta = Resposta.query.get_or_404(id)
-    
+    resposta   = Resposta.query.get_or_404(id)
+
     if resposta.eh_ia:
+        if eh_ajax:
+            return jsonify({'sucesso': False, 'mensagem': 'Sugestões da IA não recebem votos.'})
         flash("Sugestões da IA não recebem votos.", "erro")
         return redirect(request.referrer)
 
@@ -82,4 +88,16 @@ def votar_resposta(id, valor):
         banco.session.add(novo_voto)
 
     banco.session.commit()
+
+    total_likes    = Voto.query.filter_by(resposta_id=id, valor=1).count()
+    total_dislikes = Voto.query.filter_by(resposta_id=id, valor=-1).count()
+
+    # Retorna JSON para AJAX, redirect para requisição normal
+    if eh_ajax:
+        return jsonify({
+            'sucesso'       : True,
+            'total_likes'   : total_likes,
+            'total_dislikes': total_dislikes
+        })
+
     return redirect(request.referrer)

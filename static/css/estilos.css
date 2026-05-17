@@ -257,6 +257,39 @@ nav a.active, nav a:hover {
     border-radius: 4px;
 }
 
+.campo-senha {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.campo-senha .form-control {
+    width: 100%;
+    padding-right: 45px;
+}
+
+.btn-olho {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    color: #888;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+    z-index: 10;
+}
+
+.btn-olho:hover {
+    color: var(--roxo-principal);
+}
+
 /* --- DETECÇÃO DE DUPLICATAS  --- */
 .duplicatas {
     margin-top: 1rem;
