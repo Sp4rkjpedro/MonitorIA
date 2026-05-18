@@ -11,11 +11,11 @@
 {% for resposta in pergunta.respostas if resposta.eh_ia %}
     <div class="box-ia" style="background-color: rgba(138, 43, 226, 0.05); border: 1px solid var(--roxo-principal); margin-top: 25px;">
         <div style="color: var(--roxo-principal); font-weight: bold; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-            <span>🤖 Sugestão da MonitorIA</span>
+            <span><img src="{{ url_for('static', filename='imagens/monitor-ia.png') }}" alt="Monitor IA" class="iconemonitor-ia"> Sugestão da MonitorIA</span>
             <span style="font-size: 0.7rem; background: var(--roxo-principal); color: white; padding: 2px 8px; border-radius: 4px;">IA</span>
         </div>
         
-        <div class="texto-formatado">{{ resposta.corpo }}</div>
+        <div class="texto-formatado" data-pergunta-id="{{ pergunta.id }}">{{ resposta.corpo }}</div>
         
         <p style="font-size: 0.8rem; color: #718096; margin-top: 15px; border-top: 1px solid rgba(138, 43, 226, 0.1); padding-top: 10px;">
             *Respostas da IA servem como auxílio imediato. Não recebem likes e não contam como solução oficial.
@@ -94,4 +94,6 @@
 </div>
 
 <script src="{{ url_for('static', filename='js/votos.js') }}"></script>
+
+
 {% endblock %}
