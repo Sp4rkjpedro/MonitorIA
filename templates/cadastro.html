@@ -46,9 +46,13 @@
         <div class="form-grupo">
             <label for="papel">Eu sou um(a):</label>
             <select id="papel" name="papel" class="form-control" required>
+                <option value="">-- Escolha sua função --</option>
                 <option value="aluno">Aluno (Buscando Ajuda)</option>
                 <option value="monitor">Monitor (Ajudando Alunos)</option>
             </select>
+            <small id="msg-papel" style="display:none; color:#ff6347; margin-top: 5px; font-weight: 600;">
+                ✘ Por favor, escolha sua função!
+            </small>
         </div>
 
         <button type="submit" class="btn btn-roxo">Cadastrar</button>
