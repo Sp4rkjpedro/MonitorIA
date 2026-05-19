@@ -5,29 +5,32 @@
 
 {% if perguntas %}
     {% for pergunta in perguntas %}
-        <div class="box-ia" style="margin-bottom: 15px; border-left: 4px solid var(--roxo-principal);">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3 style="margin: 0;">
-                    <!-- O Monitor clica aqui para avaliar -->
-                    <a href="{{ url_for('perguntas.ver_pergunta', id=pergunta.id) }}" style="color: white; text-decoration: none;">
-                        {{ pergunta.titulo }}
-                    </a>
-                </h3>
-                <span class="badge">{{ pergunta.disciplina }}</span>
+        <a href="{{ url_for('perguntas.ver_pergunta', id=pergunta.id) }}" style="text-decoration: none; display: block;">
+            <div class="box-ia" style="margin-bottom: 15px; border-left: 4px solid var(--roxo-principal); cursor: pointer; transition: transform 0.15s, border-color 0.15s;"
+                onmouseover="this.style.transform='scale(1.01)'; this.style.borderColor='#a78bfa';"
+                onmouseout="this.style.transform='scale(1)'; this.style.borderColor='var(--roxo-principal)';">
+
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0; color: white;">{{ pergunta.titulo }}</h3>
+                    <span class="badge">{{ pergunta.disciplina }}</span>
+                </div>
+
+                <p style="color: #a0aec0; margin-top: 10px;">{{ pergunta.corpo[:120] }}...</p>
+
+                <div style="margin-top: 15px; font-size: 0.85rem; color: #718096; display: flex; justify-content: space-between; align-items: center;">
+                    <span>
+                        👤 Enviada por: {{ pergunta.usuario.nome if pergunta.usuario else 'Voce' }}
+                        &nbsp;&nbsp;
+                        💬 {{ pergunta.respostas|length }} respostas
+                    </span>
+                    {% if session.get('usuario_papel') == 'monitor' %}
+                        <span style="color: var(--roxo-principal); font-weight: bold;">
+                            VER DETALHES PARA VALIDAR →
+                        </span>
+                    {% endif %}
+                </div>
             </div>
-            
-            <p style="color: #a0aec0; margin-top: 10px;">{{ pergunta.corpo[:120] }}...</p>
-            
-            <div style="margin-top: 15px; font-size: 0.85rem; color: #718096;">
-                <span>👤 Enviada por: {{ pergunta.usuario.nome if pergunta.usuario else 'Voce' }}</span>
-                <span>💬 {{ pergunta.respostas|length }} respostas</span>
-                {% if session.get('usuario_papel') == 'monitor' %}
-                    <a href="{{ url_for('perguntas.ver_pergunta', id=pergunta.id) }}" style="float: right; color: var(--roxo-principal); font-weight: bold; text-decoration: none;">
-                        VER DETALHES PARA VALIDAR →
-                    </a>
-                {% endif %}
-            </div>
-        </div>
+        </a>
     {% endfor %}
 {% else %}
     <div class="box-ia" style="text-align: center;">

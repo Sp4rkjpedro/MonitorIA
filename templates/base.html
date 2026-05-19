@@ -11,8 +11,14 @@
     <header>
         <div class="container header-top">
             <div class="header-brand">
-                <div class="logo"><span class="logo-m"><img src="{{ url_for('static', filename='imagens/monitor-ia.png') }}" alt="Monitor IA" class="iconemonitor-ia">
-            </span> MonitorIA</div>
+                <div class="logo">
+                    <a href="{{ url_for('auth.dashboard') }}" style="text-decoration: none; color: white; display: flex; align-items: center; gap: 0.5rem;">
+                        <span class="logo-m">
+                            <img src="{{ url_for('static', filename='imagens/monitor-ia.png') }}" alt="Monitor IA" class="iconemonitor-ia">
+                        </span> 
+                        MonitorIA
+                    </a>
+        </div>
                 <nav>
                     <ul>
                         <li><a href="{{ url_for('perguntas.base') }}">Perguntas</a></li>
@@ -31,7 +37,7 @@
                     
                     <!-- Botão de Nova Pergunta APENAS para Alunos -->
                     {% if session.get('usuario_papel') == 'aluno' %}
-                        <a href="{{ url_for('perguntas.fazer_pergunta') }}" class="btn btn-roxo">+ Nova Pergunta</a>
+                        
                     {% else %}
                         <!-- Tag indicando que é um monitor logado -->
                         <span style="color: var(--roxo-principal); margin-right: 15px; font-weight: bold; font-size: 0.9rem;">

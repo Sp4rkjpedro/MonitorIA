@@ -7,20 +7,30 @@
 
     {% if perguntas %}
         {% for pergunta in perguntas %}
-            <div class="box-ia" style="margin-bottom: 20px; border-left: 4px solid var(--roxo-principal);">
-                <h3><a href="{{ url_for('perguntas.ver_pergunta', id=pergunta.id) }}" style="color: white; text-decoration: none;">{{ pergunta.titulo }}</a></h3>
-                <span class="badge">{{ pergunta.disciplina }}</span>
-                
-                <div style="font-size: 0.7rem;">
-                {% set resolvida = pergunta.respostas | selectattr('solucao', 'equalto', true) | list | length > 0 %}
-                
-                {% if resolvida %}
-                    <span style="color: #4ade80; font-weight: bold;">✅ Status: Resolvida</span>
-                {% else %}
-                    <span style="color: var(--laranja-alerta); font-weight: bold;">⏳ Status: Aguardando Monitor</span>
-                {% endif %}
-            </div>
-            </div>
+            <a href="{{ url_for('perguntas.ver_pergunta', id=pergunta.id) }}" style="text-decoration: none; display: block;">
+                <div class="box-ia" style="margin-bottom: 20px; border-left: 4px solid var(--roxo-principal); cursor: pointer; transition: transform 0.15s, border-color 0.15s;"
+                    onmouseover="this.style.transform='scale(1.01)'; this.style.borderColor='#a78bfa';"
+                    onmouseout="this.style.transform='scale(1)'; this.style.borderColor='var(--roxo-principal)';">
+
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="margin: 0; color: white;">{{ pergunta.titulo }}</h3>
+                        <span class="badge">{{ pergunta.disciplina }}</span>
+                    </div>
+
+                    <div style="margin-top: 10px; font-size: 0.85rem;">
+                        {% set resolvida = pergunta.respostas | selectattr('solucao', 'equalto', true) | list | length > 0 %}
+                        {% if resolvida %}
+                            <span style="color: #4ade80; font-weight: bold;">✅ Status: Resolvida</span>
+                        {% else %}
+                            <span style="color: var(--laranja-alerta); font-weight: bold;">⏳ Status: Aguardando Monitor</span>
+                        {% endif %}
+
+                        <span style="color: #718096; margin-left: 15px;">
+                            💬 {{ pergunta.respostas | length }} respostas
+                        </span>
+                    </div>
+                </div>
+            </a>
         {% endfor %}
     {% else %}
         <div class="box-ia" style="text-align: center;">
