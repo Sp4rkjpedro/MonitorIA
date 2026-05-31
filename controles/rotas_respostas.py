@@ -2,15 +2,37 @@ from flask import Blueprint, request, redirect, url_for, session, flash, jsonify
 from modelos.entidades import Resposta, Voto
 from extensoes import banco
 
+# 🚨 NOVOS IMPORTS: Adicionando o serviço de IA para o Guardrail funcionar aqui
+from servicos.servico_ia import ServicoIA
+from repositorios.repositorio_resposta import RepositorioResposta
+
 blueprint_respostas = Blueprint('respostas', __name__)
+
+# Instanciando o repositório e o serviço de IA na inicialização da rota
+repo_resposta = RepositorioResposta()
+servico_ia = ServicoIA(repo_resposta)
 
 @blueprint_respostas.route('/perguntas/<int:pergunta_id>/responder', methods=['POST'])
 def criar(pergunta_id):
     if 'usuario_id' not in session:
         return redirect(url_for('auth.login'))
 
+    # 1. Pegamos o texto limpo digitado pelo usuário
+    corpo_texto = request.form.get('corpo', '').strip()
+
+    # 2. Verificação básica se o campo não foi enviado vazio
+    if not corpo_texto:
+        flash("A resposta não pode estar vazia.", "aviso")
+        return redirect(url_for('perguntas.ver_pergunta', id=pergunta_id))
+
+    # 3. 🛡️ GUARDRAIL DA IA: Analisa se a resposta humana contém grosserias/xingamentos
+    if not servico_ia.verificar_conteudo_adequado(corpo_texto):
+        flash("Sua resposta contém termos inadequados para o ambiente acadêmico.", "perigo")
+        return redirect(url_for('perguntas.ver_pergunta', id=pergunta_id))
+
+    # 4. Se passou pela IA sem problemas, o banco cria e salva o registro normalmente
     nova_resposta = Resposta(
-        corpo=request.form.get('corpo', '').strip(),
+        corpo=corpo_texto,
         pergunta_id=pergunta_id,
         usuario_id=session.get('usuario_id'),
         eh_ia=False,
@@ -30,15 +52,12 @@ def definir_solucao(id):
     pergunta = resposta.pergunta
     
     usuario_logado_id = session.get('usuario_id')
-    # Nota: Ajuste 'usuario_papel' se no seu login você salva apenas como 'papel'
     papel_logado = session.get('usuario_papel') 
 
-    # Regra 1: A IA não pode ser a solução oficial
     if resposta.eh_ia:
         flash("Sugestões da IA não podem ser marcadas como solução.", "erro")
         return redirect(request.referrer)
 
-    # Regra 2: Apenas o monitor ou o autor da pergunta podem definir a solução
     eh_monitor = (papel_logado == 'monitor')
     eh_autor = (pergunta.usuario_id == usuario_logado_id)
 
@@ -46,7 +65,6 @@ def definir_solucao(id):
         flash("Apenas o autor da pergunta ou um monitor podem validar a resposta.", "erro")
         return redirect(request.referrer)
 
-    # Regra 3: Desmarca anterior e marca a nova
     Resposta.query.filter_by(pergunta_id=resposta.pergunta_id).update({"solucao": False})
     resposta.solucao = True
     banco.session.commit()
@@ -92,7 +110,6 @@ def votar_resposta(id, valor):
     total_likes    = Voto.query.filter_by(resposta_id=id, valor=1).count()
     total_dislikes = Voto.query.filter_by(resposta_id=id, valor=-1).count()
 
-    # Retorna JSON para AJAX, redirect para requisição normal
     if eh_ajax:
         return jsonify({
             'sucesso'       : True,
