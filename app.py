@@ -15,7 +15,7 @@ def criar_app() -> Flask:
     app = Flask(__name__)
     
     # Configurações do Banco de Dados e Segurança
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///monitoria.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
