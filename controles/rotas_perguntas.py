@@ -8,7 +8,6 @@ from extensoes import banco
 
 blueprint_perguntas = Blueprint('perguntas', __name__)
 
-# Instanciação dos repositórios e serviços
 repo_pergunta = RepositorioPergunta()
 repo_resposta = RepositorioResposta()
 
@@ -34,7 +33,6 @@ def checar_duplicatas():
     todas = servico.listar_todas()
     duplicatas = servico_ia.buscar_duplicatas(titulo_parcial, todas)
     
-    # Formata para o JSON que o JavaScript vai ler
     resultado = [{"id": p.id, "titulo": p.titulo} for p in duplicatas]
     return jsonify(resultado)
 
@@ -49,7 +47,29 @@ def fazer_pergunta():
         corpo = request.form.get('corpo', '').strip()
         disciplina = request.form.get('disciplina', '').strip()
 
-        # Trava final de duplicata no servidor
+        print("\n" + "="*50)
+        print(f"[REQUISIÇÃO POST] Recebendo dados do formulário do Felipe:")
+        print(f"- Título: '{titulo}'")
+        print(f"- Corpo: '{corpo}'")
+        print("="*50 + "\n")
+
+        if not titulo or not corpo:
+            flash("Por favor, preencha todos os campos obrigatórios.", "aviso")
+            return render_template('fazer_pergunta.html', disciplinas=servico.listar_disciplinas())
+
+        texto_completo = f"{titulo} {corpo}"
+
+        # 1. IA-003: Guardrail de Conteúdo
+        if not servico_ia.verificar_conteudo_adequado(texto_completo):
+            flash("Sua publicação contém termos inadequados para o ambiente acadêmico.", "perigo")
+            return render_template('fazer_pergunta.html', disciplinas=servico.listar_disciplinas())
+
+        # 2. IA-004: Filtro de Coerência Pedagógica
+        if not servico_ia.verificar_coerencia_pedagogica(titulo, corpo):
+            flash("Sua pergunta parece não ter nexo pedagógico ou está incompleta.", "aviso")
+            return render_template('fazer_pergunta.html', disciplinas=servico.listar_disciplinas())
+
+        # 3. IA-001: Trava final de duplicata no servidor
         todas = servico.listar_todas()
         if servico_ia.buscar_duplicatas(titulo, todas):
             flash("Pergunta muito similar já existe!", "perigo")
@@ -62,17 +82,16 @@ def fazer_pergunta():
             'usuario_id': session.get('usuario_id')
         }
         
-        # 1. Salva a pergunta do Aluno
         pergunta = servico.criar_pergunta(dados)
 
-        # 2. IA-002: Monitor Virtual gera e salva a sugestão imediatamente
+        # 4. IA-002: Monitor Virtual gera e salva a sugestão imediatamente
         try:
             sugestao = servico_ia.gerar_sugestao_monitoria(pergunta)
             if sugestao:
                 resposta_ia = Resposta(
                     corpo=sugestao,
                     pergunta_id=pergunta.id,
-                    usuario_id=None, # Conforme entidade (Nulo para IA)
+                    usuario_id=None,
                     eh_ia=True,
                     solucao=False
                 )
