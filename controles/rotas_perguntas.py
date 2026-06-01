@@ -17,8 +17,18 @@ servico_ia = ServicoIA(repo_resposta)
 @blueprint_perguntas.route('/')
 def base():
     """Home do sistema."""
+    disciplina_filtro = request.args.get('disciplina', '').strip()
+    
+    todas = servico.listar_todas()
+    
+    if disciplina_filtro:
+        perguntas = [p for p in todas if p.disciplina == disciplina_filtro]
+    else:
+        perguntas = todas
+
     return render_template('home.html', 
-                           perguntas=servico.listar_todas(), 
+                           perguntas=perguntas,
+                           disciplina_ativa=disciplina_filtro,
                            disciplinas=servico.listar_disciplinas())
 
 @blueprint_perguntas.route('/perguntas/checar-duplicatas', methods=['POST'])

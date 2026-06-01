@@ -1,19 +1,19 @@
 /* --- VARIÁVEIS DE COR --- */
 :root {
-    --bg-fundo: #12141a;
-    --bg-card: #1c1e26;
-    --bg-ia: #2e1c4e; /* Roxo escuro para a IA */
-    
-    --texto-principal: #ffffff;
-    --texto-secundario: #b3b3b3;
-    --texto-ia: #e1ccff; /* Roxo claro para o texto da IA */
-    
-    --roxo-principal: #6c5ce7;
-    --roxo-hover: #5a4bcf;
-    --roxo-badge: #b593d8; /* Para o ícone da IA */
+    --bg-fundo: #f0f0f0;
+    --bg-card: #ffffff;
+    --bg-ia: #fff8f0;
 
-    --verde-resolvido: #4ade80;
-    --laranja-alerta: #d4d236;
+    --texto-principal: #1a1a1a;
+    --texto-secundario: #555555;
+    --texto-ia: #4a2f00;
+
+    --roxo-principal: #FF8C00;
+    --roxo-hover: #e67e00;
+    --roxo-badge: #FF8C00;
+
+    --verde-resolvido: #2E7D32;
+    --laranja-alerta: #e65100;
 
     --gap-padrao: 1.5rem;
     --raio-padrao: 10px;
@@ -48,16 +48,115 @@ main {
 }
 
 /* --- HEADER --- */
-header {
-    background-color: var(--bg-card);
-    padding: 1rem 0;
-    border-bottom: 1px solid #2a2d38;
+
+/* --- SIDEBAR NAV VERTICAL --- */
+body {
+    display: flex;
+    min-height: 100vh;
 }
 
-header .container {
+.sidebar-nav {
+    width: 250px;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #FFA500 0%, #FF6B00 100%);
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    padding: 1.5rem 1rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 100;
+}
+
+.sidebar-logo a {
+    display: flex;
     align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    border-radius: 10px;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.15);
+    transition: background 0.2s;
+}
+
+.sidebar-link:hover {
+    background: rgba(255, 255, 255, 0.28);
+}
+
+.sidebar-link-verde {
+    background: #2E7D32;
+    border: 1px solid #1b5e20;
+    color: white;
+}
+
+.sidebar-link-verde:hover {
+    background: #1b5e20;
+}
+
+.sidebar-link-verde:hover {
+    background: rgba(74, 222, 128, 0.4);
+}
+
+.sidebar-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 1rem;
+    margin-top: auto;
+}
+
+.sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.sidebar-user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-user-nome {
+    color: white;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.sidebar-sair {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+    text-decoration: none;
+}
+
+.sidebar-sair:hover {
+    color: white;
+}
+
+/* Empurra o conteúdo para a direita da sidebar */
+.container {
+    margin-left: 250px !important;
+    max-width: calc(1200px - 250px);
+    padding: 2rem var(--gap-padrao);
 }
 
 .logo {
@@ -190,8 +289,8 @@ nav a.active, nav a:hover {
 
 .form-control {
     padding: 1rem;
-    background-color: #12141a;
-    border: 1px solid #2a2d38;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
     color: var(--texto-principal);
     border-radius: 6px;
     font-size: 1rem;
@@ -210,12 +309,11 @@ nav a.active, nav a:hover {
 /* --- BOX DA IA --- */
 .box-ia {
     background-color: var(--bg-ia);
-    border: 1px solid #4a2f8c;
+    border: 1px solid #ffcc80;
     border-radius: var(--raio-padrao);
     padding: 1rem;
     color: var(--texto-ia);
 }
-
 .header-ia {
     display: flex;
     align-items: center;
@@ -655,4 +753,43 @@ code {
     border-radius: 4px;
     font-family: 'Courier New', Courier, monospace;
     font-size: 0.95rem;
+}
+.sidebar-dropdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.sidebar-dropdown-btn {
+    width: 100%;
+    cursor: pointer;
+    border: none;
+    justify-content: space-between;
+}
+
+.sidebar-dropdown-lista {
+    flex-direction: column;
+    gap: 0.3rem;
+    padding-left: 0.5rem;
+}
+
+.sidebar-dropdown-item {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: rgba(255,255,255,0.85);
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.sidebar-dropdown-item:hover {
+    background: rgba(255,255,255,0.15);
+    color: white;
+}
+
+.sidebar-dropdown-item-ativa {
+    background: rgba(255,255,255,0.25);
+    color: white;
+    font-weight: bold;
 }

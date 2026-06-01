@@ -8,89 +8,81 @@
     <script src="{{ url_for('static', filename='js/notificacao.js') }}" defer></script>
 </head>
 <body>
-    <header>
-        <div class="container header-top">
-            <div class="header-brand">
-                <div class="logo">
-                    <a href="{{ url_for('auth.dashboard') }}" style="text-decoration: none; color: white; display: flex; align-items: center; gap: 0.5rem;">
-                        <span class="logo-m">
-                            <img src="{{ url_for('static', filename='imagens/monitor-ia.png') }}" alt="Monitor IA" class="iconemonitor-ia">
-                        </span> 
-                        MonitorIA
-                    </a>
-        </div>
-                <nav>
-                    <ul>
-                        <li><a href="{{ url_for('perguntas.base') }}">Perguntas</a></li>
-                        
-                        <!-- Aparece APENAS para Alunos -->
-                        {% if session.get('usuario_papel') == 'aluno' %}
-                            <li><a href="{{ url_for('perguntas.minhas_perguntas') }}">Minhas Dúvidas</a></li>
-                        {% endif %}
-                    </ul>
-                </nav>
-            </div>
-            
-            <div class="header-acoes">
-                {% if session.get('usuario_id') %}
-                    <!-- INÍCIO: Ações para Usuário Logado -->
-                    
-                    <!-- Botão de Nova Pergunta APENAS para Alunos -->
-                    {% if session.get('usuario_papel') == 'aluno' %}
-                        
-                    {% else %}
-                        <!-- Tag indicando que é um monitor logado -->
-                        <span style="color: var(--roxo-principal); margin-right: 15px; font-weight: bold; font-size: 0.9rem;">
-                             <img src="{{ url_for('static', filename='imagens/iconemonitor.png') }}" alt="Monitor IA" class="iconemonitor-ia"> MODO MONITOR
-                        </span>
-                    {% endif %}
-                    
-                    <a href="{{ url_for('auth.dashboard') }}" class="user-badge" title="Meu Painel">
-                         {{ session.get('usuario_nome')[:2] | upper }}
-                    </a>
-                    
-                    <a href="{{ url_for('auth.logout') }}" style="margin-left: 10px; color: var(--laranja-alerta); font-size: 0.8rem; text-decoration: none;">Sair</a>
-                    
-                {% else %}
-                    <!-- INÍCIO: Ações para Usuário Deslogado -->
-                    <a href="{{ url_for('auth.login') }}" class="btn" style="color: white; text-decoration: none;">Entrar</a>
-                    <a href="{{ url_for('auth.cadastro') }}" class="btn btn-roxo">Cadastrar</a>
+   <aside class="sidebar-nav">
+    <!-- LOGO -->
+    <div class="sidebar-logo">
+        <a href="{{ url_for('auth.dashboard') }}">
+            <img src="{{ url_for('static', filename='imagens/monitor-ia.png') }}" alt="Monitor IA" class="iconemonitor-ia">
+            <span>MonitorIA</span>
+        </a>
+    </div>
+
+    <!-- MENU -->
+    <nav class="sidebar-menu">
+        <a href="{{ url_for('perguntas.base') }}" class="sidebar-link">
+            💬 Perguntas
+        </a>
+        {% if session.get('usuario_papel') == 'aluno' %}
+            <a href="{{ url_for('perguntas.minhas_perguntas') }}" class="sidebar-link sidebar-link-verde">
+                💬 Minhas Dúvidas
+            </a>
+           <!-- DISCIPLINAS COM DROPDOWN -->
+            <div class="sidebar-dropdown">
+                <button class="sidebar-link sidebar-link-verde sidebar-dropdown-btn" onclick="toggleDisciplinas()">
+                    📋 Disciplinas <span id="seta-disciplinas">▼</span>
+                </button>
+                <div class="sidebar-dropdown-lista" id="lista-disciplinas" style="display:none;">
+                    {% if disciplinas %}
+                    {% for disc in disciplinas %}
+                        <a href="{{ url_for('perguntas.base') }}?disciplina={{ disc }}" 
+                        class="sidebar-dropdown-item {% if request.args.get('disciplina') == disc %}sidebar-dropdown-item-ativa{% endif %}">
+                            {{ disc }}
+                        </a>
+                    {% endfor %}
                 {% endif %}
+                </div>
             </div>
-        </div>
+        {% endif %}
+        {% if session.get('usuario_papel') == 'monitor' %}
+            <a href="{{ url_for('perguntas.base') }}" class="sidebar-link sidebar-link-verde">
+                <img src="{{ url_for('static', filename='imagens/iconemonitor.png') }}" alt="Monitor" class="iconemonitor-ia"> Modo Monitor
+            </a>
+        {% endif %}
+    </nav>
 
-         {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                           <div class="notificacao notificacao-{{ category }} visivel">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
+    <!-- RODAPÉ -->
+    <div class="sidebar-footer">
+        {% if session.get('usuario_id') %}
+            <div class="sidebar-user">
+                <div class="user-badge">{{ session.get('usuario_nome')[:2] | upper }}</div>
+                <div class="sidebar-user-info">
+                    <span class="sidebar-user-nome">{{ session.get('usuario_nome')[:15] }}</span>
+                    <a href="{{ url_for('auth.logout') }}" class="sidebar-sair">Sair</a>
+                </div>
+            </div>
+        {% else %}
+            <a href="{{ url_for('auth.login') }}" class="sidebar-link">Entrar</a>
+            <a href="{{ url_for('auth.cadastro') }}" class="sidebar-link sidebar-link-verde">Cadastrar</a>
+        {% endif %}
+    </div>
 
-    </header>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+               <div class="notificacao notificacao-{{ category }} visivel">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</aside>
 
     <div class="container">
         <main>
-            <aside class="sidebar">
-                <section class="sidebar-sessao">
-                    <h3>DISCIPLINAS</h3>
-                    <ul>
-                        {% if disciplinas %}
-                            {% for disc in disciplinas %}
-                                <li><a href="#">{{ disc }}</a></li>
-                            {% endfor %}
-                        {% else %}
-                            <li><a href="#">Carregando tópicos...</a></li>
-                        {% endif %}
-                    </ul>
-                </section>
-                <div class="box-ia sidebar-info">
-                    <h4>Monitor Virtual</h4>
-                    <p>Sua dúvida é analisada instantaneamente pelo nosso modelo de IA.</p>
+         <aside class="sidebar">
+            <div class="box-ia sidebar-info">
+                <h4>Monitor Virtual</h4>
+                <p>Sua dúvida é analisada instantaneamente pelo nosso modelo de IA.</p>
                 </div>
-            </aside>
+            </aside>   
 
             <section class="conteudo">
                 <!-- Bloco para Mensagens de Feedback -->
@@ -98,5 +90,18 @@
             </section>
         </main>
     </div>
+                <script>
+            function toggleDisciplinas() {
+                const lista = document.getElementById('lista-disciplinas');
+                const seta = document.getElementById('seta-disciplinas');
+                if (lista.style.display === 'none') {
+                    lista.style.display = 'flex';
+                    seta.textContent = '▲';
+                } else {
+                    lista.style.display = 'none';
+                    seta.textContent = '▼';
+                }
+            }
+            </script>
 </body>
 </html>

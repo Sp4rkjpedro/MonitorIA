@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
+        {% if disciplina_ativa %}
+            <h2 style="color: white; margin-bottom: 20px;">
+                📋 {{ disciplina_ativa }}
+                <a href="{{ url_for('perguntas.base') }}" style="font-size: 0.8rem; color: #a78bfa; margin-left: 10px;">✕ Limpar filtro</a>
+            </h2>
+        {% else %}
+            <h2 style="color: white; margin-bottom: 20px;">Mural de Dúvidas</h2>
+        {% endif %}
 <h2 style="color: white; margin-bottom: 20px;">Mural de Dúvidas</h2>
 
 {% if perguntas %}
