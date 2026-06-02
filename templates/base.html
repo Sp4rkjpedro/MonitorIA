@@ -20,15 +20,15 @@
     <!-- MENU -->
     <nav class="sidebar-menu">
         <a href="{{ url_for('perguntas.base') }}" class="sidebar-link">
-            💬 Perguntas
+            <img src="{{ url_for('static', filename='imagens/perguntas.png') }}" alt="Monitor IA" class="iconemonitor-ia"> Perguntas
         </a>
         {% if session.get('usuario_papel') == 'aluno' %}
-            <a href="{{ url_for('perguntas.minhas_perguntas') }}" class="sidebar-link sidebar-link-verde">
-                💬 Minhas Dúvidas
+            <a href="{{ url_for('perguntas.minhas_perguntas') }}" class="sidebar-link sidebar-link">
+                <img src="{{ url_for('static', filename='imagens/duvidas.png') }}" alt="Monitor IA" class="iconemonitor-ia"> Minhas Dúvidas 
             </a>
            <!-- DISCIPLINAS COM DROPDOWN -->
             <div class="sidebar-dropdown">
-                <button class="sidebar-link sidebar-link-verde sidebar-dropdown-btn" onclick="toggleDisciplinas()">
+                <button class="sidebar-link sidebar-link sidebar-dropdown-btn" onclick="toggleDisciplinas()">
                     📋 Disciplinas <span id="seta-disciplinas">▼</span>
                 </button>
                 <div class="sidebar-dropdown-lista" id="lista-disciplinas" style="display:none;">
@@ -52,6 +52,19 @@
 
     <!-- RODAPÉ -->
     <div class="sidebar-footer">
+        <div class="sidebar-footer">
+
+    <!-- Monitor Virtual -->
+    <div style="background: rgba(255,255,255,0.15); border-radius: 10px; padding: 0.85rem 1rem; margin-bottom: 1rem;">
+        <div style="color: white; font-weight: bold; font-size: 0.9rem; margin-bottom: 0.3rem;">🤖 Monitor Virtual</div>
+        <div style="color: rgba(255,255,255,0.75); font-size: 0.8rem;">Sua dúvida é analisada instantaneamente pelo nosso modelo de IA.</div>
+    </div>
+
+    {% if session.get('usuario_id') %}
+        <div class="sidebar-user">
+        </div>
+    {% endif %}
+</div>
         {% if session.get('usuario_id') %}
             <div class="sidebar-user">
                 <div class="user-badge">{{ session.get('usuario_nome')[:2] | upper }}</div>
@@ -77,12 +90,6 @@
 
     <div class="container {% block container_class %}{% endblock %}">
         <main>
-            <aside class="sidebar">
-                <div class="box-ia sidebar-info">
-                    <h4>Monitor Virtual</h4>
-                    <p>Sua dúvida é analisada instantaneamente pelo nosso modelo de IA.</p>
-                </div>
-            </aside>   
 
             <section class="conteudo">
                 {% block content %}{% endblock %}

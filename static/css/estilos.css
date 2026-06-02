@@ -35,16 +35,14 @@ body {
 
 /* --- LAYOUT --- */
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 var(--gap-padrao);
+    margin-left: 250px !important;
+    max-width: 100%;
+    padding: 2rem var(--gap-padrao);
 }
 
 main {
     margin-top: 2rem;
-    display: grid;
-    grid-template-columns: 280px 1fr; /* Sidebar e Conteúdo */
-    gap: var(--gap-padrao);
+    display: block;
 }
 
 /* --- HEADER --- */
@@ -261,7 +259,7 @@ nav a.active, nav a:hover {
 /* --- CARDS E CONTEÚDO PRINCIPAL --- */
 .conteudo {
     background-color: var(--bg-card);
-    padding: 2rem;
+    padding: 15rem;
     border-radius: var(--raio-padrao);
 }
 
