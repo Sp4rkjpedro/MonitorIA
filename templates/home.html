@@ -7,9 +7,9 @@
                 <a href="{{ url_for('perguntas.base') }}" style="font-size: 0.8rem; color: #a78bfa; margin-left: 10px;">✕ Limpar filtro</a>
             </h2>
         {% else %}
-            <h2 style="color: white; margin-bottom: 20px;">Mural de Dúvidas</h2>
+            <h2 style="color: rgb(0, 0, 0); margin-bottom: 20px;">Mural de Dúvidas</h2>
         {% endif %}
-<h2 style="color: white; margin-bottom: 20px;">Mural de Dúvidas</h2>
+
 
 {% if perguntas %}
     {% for pergunta in perguntas %}
@@ -19,7 +19,7 @@
                 onmouseout="this.style.transform='scale(1)'; this.style.borderColor='var(--roxo-principal)';">
 
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3 style="margin: 0; color: white;">{{ pergunta.titulo }}</h3>
+                    <h3 style="margin: 0; color: rgb(10, 8, 8);">{{ pergunta.titulo }}</h3>
                     <span class="badge">{{ pergunta.disciplina }}</span>
                 </div>
 

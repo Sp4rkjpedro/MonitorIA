@@ -31,6 +31,7 @@ body {
     background-color: var(--bg-fundo);
     color: var(--texto-principal);
     line-height: 1.6;
+    
 }
 
 /* --- LAYOUT --- */
@@ -45,13 +46,9 @@ main {
     display: block;
 }
 
-/* --- HEADER --- */
+
 
 /* --- SIDEBAR NAV VERTICAL --- */
-body {
-    display: flex;
-    min-height: 100vh;
-}
 
 .sidebar-nav {
     width: 250px;
@@ -259,8 +256,9 @@ nav a.active, nav a:hover {
 /* --- CARDS E CONTEÚDO PRINCIPAL --- */
 .conteudo {
     background-color: var(--bg-card);
-    padding: 15rem;
+    padding: 2rem;
     border-radius: var(--raio-padrao);
+    
 }
 
 .titulo-pagina {
@@ -1327,3 +1325,4 @@ body:has(.container-auth) .sidebar-nav {
 .voltar-link a:hover {
     text-decoration: underline;
 }
+
