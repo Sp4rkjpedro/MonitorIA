@@ -2,56 +2,50 @@
 
 {% block content %}
 
-<div class="box-ia" style="border-left: 4px solid var(--roxo-principal);">
-    <h2 style="color: white; margin-bottom: 5px;">{{ pergunta.titulo }}</h2>
-    <span class="badge" style="margin-bottom: 15px; display: inline-block;">{{ pergunta.disciplina }}</span>
-    <p style="color: #e2e8f0; line-height: 1.6;">{{ pergunta.corpo }}</p>
+<!-- Pergunta -->
+<div class="card-pergunta-detalhe">
+    <h2 class="card-pergunta-titulo">{{ pergunta.titulo }}</h2>
+    <span class="badge badge-disciplina">{{ pergunta.disciplina }}</span>
+    <p class="card-pergunta-corpo">{{ pergunta.corpo }}</p>
 </div>
 
+<!-- Resposta da IA -->
 {% for resposta in pergunta.respostas if resposta.eh_ia %}
-    <div class="box-ia" style="background-color: rgba(138, 43, 226, 0.05); border: 1px solid var(--roxo-principal); margin-top: 25px;">
-        <div style="color: var(--roxo-principal); font-weight: bold; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-            <span><img src="{{ url_for('static', filename='imagens/monitor-ia.png') }}" alt="Monitor IA" class="iconemonitor-ia"> Sugestão da MonitorIA</span>
-            <span style="font-size: 0.7rem; background: var(--roxo-principal); color: white; padding: 2px 8px; border-radius: 4px;">IA</span>
+    <div class="card-ia">
+        <div class="card-ia-header">
+            <span class="card-ia-titulo">
+                <img src="{{ url_for('static', filename='imagens/monitor-ia.png') }}" alt="Monitor IA" class="iconemonitor-ia"> 
+                Sugestão da MonitorIA
+            </span>
+            <span class="badge-ia">IA</span>
         </div>
-        
         <div class="texto-formatado" data-pergunta-id="{{ pergunta.id }}">{{ resposta.corpo }}</div>
-        
-        <p style="font-size: 0.8rem; color: #718096; margin-top: 15px; border-top: 1px solid rgba(138, 43, 226, 0.1); padding-top: 10px;">
-            *Respostas da IA servem como auxílio imediato. Não recebem likes e não contam como solução oficial.
-        </p>
+        <p class="card-ia-aviso">*Respostas da IA servem como auxílio imediato. Não recebem likes e não contam como solução oficial.</p>
     </div>
 {% endfor %}
 
-<h3 id="respostas-comunidade" style="margin-top: 40px; margin-bottom: 20px; color: white;">
-    Respostas da Comunidade
-</h3>
+<!-- Respostas da Comunidade -->
+<h3 id="respostas-comunidade" class="secao-titulo">Respostas da Comunidade</h3>
 
 {% set respostas_humanas = pergunta.respostas | selectattr('eh_ia', 'equalto', false) | list %}
 
 {% if respostas_humanas %}
     {% for resposta in respostas_humanas %}
-        <div id="resposta-{{ resposta.id }}" class="box-ia {% if resposta.solucao %}solucao-destaque{% endif %}" style="margin-bottom: 20px;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                <span style="color: #a0aec0; font-weight: bold;">👤 Resposta Humana</span>
-                {% if resposta.solucao %} 
-                    <span style="color: #4ade80; font-weight: bold;">✅ Solução Oficial</span> 
+        <div id="resposta-{{ resposta.id }}" class="card-resposta {% if resposta.solucao %}solucao-destaque{% endif %}">
+            <div class="card-resposta-header">
+                <span class="card-resposta-autor">👤 Resposta da Comunidade</span>
+                {% if resposta.solucao %}
+                    <span class="badge-solucao">✅ Solução Oficial</span>
                 {% endif %}
             </div>
-            
-            <p style="color: #e2e8f0; line-height: 1.6; margin-bottom: 15px;">{{ resposta.corpo }}</p>
 
-            <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px;">
-                <button 
-                    class="btn-feedback btn-votar" 
-                    data-id="{{ resposta.id }}" 
-                    data-valor="1">
+            <p class="card-resposta-corpo">{{ resposta.corpo }}</p>
+
+            <div class="card-resposta-acoes">
+                <button class="btn-feedback btn-votar" data-id="{{ resposta.id }}" data-valor="1">
                     👍 <span id="likes-{{ resposta.id }}">{{ resposta.total_likes }}</span>
                 </button>
-                <button 
-                    class="btn-feedback btn-votar" 
-                    data-id="{{ resposta.id }}" 
-                    data-valor="0">
+                <button class="btn-feedback btn-votar" data-id="{{ resposta.id }}" data-valor="0">
                     👎 <span id="dislikes-{{ resposta.id }}">{{ resposta.total_dislikes }}</span>
                 </button>
             </div>
@@ -59,41 +53,40 @@
             {% if not resposta.solucao %}
                 {% set papel = session.get('usuario_id') and (session.get('usuario_papel') or session.get('papel')) %}
                 {% if session.get('usuario_id') == pergunta.usuario_id or papel == 'monitor' %}
-                    <hr style="border-color: #2d3748; margin: 15px 0;">
+                    <hr class="card-divider">
                     <form action="{{ url_for('respostas.definir_solucao', id=resposta.id) }}" method="POST">
-                        <button type="submit" class="btn btn-outline-laranja" style="font-size: 0.85rem;">Marcar como Solução</button>
+                        <button type="submit" class="btn btn-solucao">Marcar como Solução</button>
                     </form>
                 {% endif %}
             {% endif %}
         </div>
     {% endfor %}
 {% else %}
-    <p style="color: #a0aec0; text-align: center; margin-bottom: 30px;">Ainda não há respostas da comunidade. Seja o primeiro!</p>
+    <p class="sem-respostas">Ainda não há respostas da comunidade. Seja o primeiro!</p>
 {% endif %}
 
+<!-- Formulário de Resposta -->
 {% if session.get('usuario_id') %}
-    <div class="box-ia" style="margin-top: 30px; border-top: 2px solid #2d3748; padding-top: 25px;">
-        <h4 style="color: white; margin-bottom: 15px;">Sua Resposta</h4>
-       <form action="{{ url_for('respostas.criar', pergunta_id=pergunta.id) }}" method="POST">
+    <div class="card-nova-resposta">
+        <h4 class="card-nova-resposta-titulo">Sua Resposta</h4>
+        <form action="{{ url_for('respostas.criar', pergunta_id=pergunta.id) }}" method="POST">
             <textarea 
                 name="corpo" 
                 placeholder="Escreva sua explicação aqui..." 
-                style="width: 100%; background: #1a202c; border: 1px solid #2d3748; color: white; border-radius: 8px; padding: 15px; min-height: 120px; margin-bottom: 15px;" 
+                class="form-control textarea-resposta"
                 required></textarea>
             <button type="submit" class="btn btn-roxo">Enviar Resposta</button>
         </form>
     </div>
 {% else %}
-    <div style="text-align: center; padding: 20px; color: #a0aec0;">
-        <p>Faça <a href="{{ url_for('auth.login') }}" style="color: var(--roxo-principal);">login</a> para responder.</p>
+    <div class="login-aviso">
+        <p>Faça <a href="{{ url_for('auth.login') }}">login</a> para responder.</p>
     </div>
 {% endif %}
 
-<div style="margin-top: 30px;">
-    <a href="{{ url_for('perguntas.base') }}" style="color: var(--roxo-principal); text-decoration: none;">&larr; Voltar para as perguntas</a>
+<div class="voltar-link">
+    <a href="{{ url_for('perguntas.base') }}">&larr; Voltar para as perguntas</a>
 </div>
 
 <script src="{{ url_for('static', filename='js/votos.js') }}"></script>
-
-
 {% endblock %}

@@ -793,3 +793,539 @@ code {
     color: white;
     font-weight: bold;
 }
+
+/* Layout Auth com dois painéis */
+.auth-wrapper {
+    display: flex;
+    min-height: calc(100vh - 70px);
+    border-radius: 0;
+    overflow: hidden;
+    box-shadow: none;
+    margin: 0;
+    max-width: 100%;
+}
+
+/* Painel Esquerdo */
+.auth-painel-esquerdo {
+    background: linear-gradient(135deg, var(--roxo-principal), #3a1a6e);
+    width: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 30px;
+}
+
+.auth-painel-conteudo {
+    text-align: center;
+    color: white;
+}
+
+.logo-auth {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: white;
+}
+
+.auth-painel-conteudo h2 {
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+    color: white;
+}
+
+.auth-painel-conteudo p {
+    font-size: 0.95rem;
+    opacity: 0.85;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.btn-auth-secundario {
+    display: inline-block;
+    padding: 10px 28px;
+    border: 2px solid white;
+    border-radius: var(--raio-padrao);
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-auth-secundario:hover {
+    background: white;
+    color: var(--roxo-principal);
+}
+
+/* Painel Direito */
+.auth-painel-direito {
+    background-color: var(--fundo-secundario);
+    width: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.auth-form-container {
+    width: 100%;
+    max-width: 420px;
+}
+
+.auth-titulo {
+    font-size: 1.6rem;
+    color: white;
+    margin-bottom: 5px;
+}
+
+.auth-subtitulo {
+    color: #a0aec0;
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+}
+
+.btn-auth-principal {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+/* Campo com ícone */
+.campo-icone {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.campo-icone > svg:first-child {
+    position: absolute;
+    left: 12px;
+    color: #a0aec0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.campo-icone .form-control {
+    padding-left: 40px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.campo-icone.campo-senha .form-control {
+    padding-right: 45px;
+}
+
+/* Responsivo */
+@media (max-width: 650px) {
+    .auth-wrapper {
+        flex-direction: column;
+        min-height: auto;
+    }
+    .auth-painel-esquerdo {
+        width: 100%;
+        padding: 30px 20px;
+    }
+    .auth-painel-direito {
+        width: 100%;
+        padding: 30px 20px;
+    }
+}
+
+/* Container especial para páginas de auth */
+.container-auth {
+    margin-left: 0 !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    width: calc(100% - 250px) !important;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.container-auth main {
+    display: block !important;
+    margin-top: 0 !important;
+    height: 100vh;
+}
+
+.container-auth .sidebar {
+    display: none !important;
+}
+
+.container-auth .conteudo {
+    padding: 0 !important;
+    border-radius: 0 !important;
+    height: 100vh;
+    background: transparent;
+}
+
+.auth-wrapper {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+.auth-painel-esquerdo {
+    background: linear-gradient(135deg, var(--roxo-principal), #7b2d8b);
+    width: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 30px;
+}
+
+.auth-painel-direito {
+    background-color: #ffffff;
+    width: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.auth-titulo {
+    font-size: 1.6rem;
+    color: #1a1a1a;
+    margin-bottom: 5px;
+}
+
+.auth-subtitulo {
+    color: #718096;
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+}
+
+.auth-form-container .form-grupo label {
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+.auth-form-container .form-control {
+    background-color: #f7f7f7;
+    border: 1px solid #ddd;
+    color: #1a1a1a;
+}
+
+.auth-form-container .form-control::placeholder {
+    color: #aaa;
+}
+
+.auth-form-container .auth-link {
+    color: #555;
+}
+
+.container-auth {
+    margin-left: 0 !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    width: 100% !important;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.container-auth main {
+    display: block !important;
+    margin-top: 0 !important;
+    height: 100vh;
+}
+
+.container-auth .sidebar {
+    display: none !important;
+}
+
+.container-auth .conteudo {
+    padding: 0 !important;
+    border-radius: 0 !important;
+    height: 100vh;
+    background: transparent;
+}
+
+/* Esconde a sidebar laranja nas páginas de auth */
+body:has(.container-auth) .sidebar-nav {
+    display: none !important;
+}
+
+.auth-painel-unico {
+    width: 100%;
+    height: 100vh;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+.auth-painel-unico {
+    width: 60%;
+    min-height: 100vh;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 40px;
+    overflow-y: auto;
+}
+
+.auth-wrapper {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+}
+
+.auth-painel-esquerdo {
+    background: linear-gradient(135deg, var(--roxo-principal), #7b2d8b);
+    width: 40%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 30px;
+    position: sticky;
+    top: 0;
+}
+
+.auth-painel-unico {
+    width: 60%;
+    height: 100vh;
+    background-color: #ffffff;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 30px 40px;
+    overflow-y: auto;
+}
+
+.auth-form-container {
+    width: 100%;
+    max-width: 480px;
+    padding: 20px 0;
+}
+
+.auth-form-container .form-pergunta {
+    gap: 1rem;
+}
+
+.auth-form-container .form-control {
+    padding: 0.75rem 0.75rem 0.75rem 40px;
+    font-size: 0.95rem;
+}
+
+/* === VER PERGUNTA === */
+
+.card-pergunta-detalhe {
+    background-color: var(--bg-card);
+    border: 1px solid #ffcc80;
+    border-left: 4px solid var(--roxo-principal);
+    border-radius: var(--raio-padrao);
+    padding: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.card-pergunta-titulo {
+    color: var(--texto-principal);
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+}
+
+.card-pergunta-corpo {
+    color: var(--texto-secundario);
+    line-height: 1.7;
+    margin-top: 10px;
+}
+
+.badge-disciplina {
+    background-color: rgba(255, 140, 0, 0.15);
+    color: var(--roxo-principal);
+    border: 1px solid var(--roxo-principal);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* Card IA */
+.card-ia {
+    background-color: rgba(255, 140, 0, 0.05);
+    border: 1px solid var(--roxo-principal);
+    border-radius: var(--raio-padrao);
+    padding: 1.5rem;
+    margin-top: 20px;
+}
+
+.card-ia-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.card-ia-titulo {
+    color: var(--roxo-principal);
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.badge-ia {
+    font-size: 0.7rem;
+    background: var(--roxo-principal);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.card-ia-aviso {
+    font-size: 0.8rem;
+    color: var(--texto-secundario);
+    margin-top: 15px;
+    border-top: 1px solid rgba(255, 140, 0, 0.15);
+    padding-top: 10px;
+}
+
+.texto-formatado {
+    color: var(--texto-principal);
+    line-height: 1.7;
+}
+
+/* Seção título */
+.secao-titulo {
+    margin-top: 40px;
+    margin-bottom: 20px;
+    color: var(--texto-principal);
+    font-size: 1.2rem;
+    border-bottom: 2px solid var(--roxo-principal);
+    padding-bottom: 8px;
+}
+
+/* Card Resposta */
+.card-resposta {
+    background-color: var(--bg-card);
+    border: 1px solid #e2e8f0;
+    border-radius: var(--raio-padrao);
+    padding: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.card-resposta-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.card-resposta-autor {
+    color: var(--texto-secundario);
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.badge-solucao {
+    color: var(--verde-resolvido);
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.card-resposta-corpo {
+    color: var(--texto-principal);
+    line-height: 1.7;
+    margin-bottom: 15px;
+}
+
+.card-resposta-acoes {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.card-divider {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    margin: 15px 0;
+}
+
+.btn-solucao {
+    background: transparent;
+    border: 1px solid var(--verde-resolvido);
+    color: var(--verde-resolvido);
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-solucao:hover {
+    background: var(--verde-resolvido);
+    color: white;
+}
+
+/* Sem respostas */
+.sem-respostas {
+    color: var(--texto-secundario);
+    text-align: center;
+    padding: 20px;
+    border: 1px dashed #ccc;
+    border-radius: var(--raio-padrao);
+    margin-bottom: 20px;
+}
+
+/* Nova resposta */
+.card-nova-resposta {
+    background-color: var(--bg-card);
+    border: 1px solid #e2e8f0;
+    border-top: 3px solid var(--roxo-principal);
+    border-radius: var(--raio-padrao);
+    padding: 1.5rem;
+    margin-top: 30px;
+}
+
+.card-nova-resposta-titulo {
+    color: var(--texto-principal);
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.textarea-resposta {
+    width: 100%;
+    min-height: 120px;
+    margin-bottom: 15px;
+    resize: vertical;
+}
+
+/* Login aviso */
+.login-aviso {
+    text-align: center;
+    padding: 20px;
+    color: var(--texto-secundario);
+}
+
+.login-aviso a {
+    color: var(--roxo-principal);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* Voltar */
+.voltar-link {
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.voltar-link a {
+    color: var(--roxo-principal);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.voltar-link a:hover {
+    text-decoration: underline;
+}
