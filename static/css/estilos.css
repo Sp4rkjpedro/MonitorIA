@@ -317,8 +317,8 @@ nav a.active, nav a:hover {
 }
 
 .iconemonitor-ia { 
-    width: 30px; 
-    height: 30px; 
+    width: 40px; 
+    height: 40px; 
     margin-right: 0.1px;  /* era 15px, reduzi para aproximar */
     flex-shrink: 0;
     vertical-align: middle;
