@@ -1,19 +1,19 @@
 /* --- VARIÁVEIS DE COR --- */
 :root {
     --bg-fundo: #f0f0f0;
-    --bg-card: #ffffff;
+    --bg-card: #0a37b98c;
     --bg-ia: #fff8f0;
 
-    --texto-principal: #1a1a1a;
-    --texto-secundario: #555555;
+    --texto-principal: #ffffff;
+    --texto-secundario: #98c6f0;
     --texto-ia: #4a2f00;
 
     --roxo-principal: #FF8C00;
     --roxo-hover: #e67e00;
-    --roxo-badge: #FF8C00;
+    --roxo-badge: #6d80b98c;
 
     --verde-resolvido: #2E7D32;
-    --laranja-alerta: #e65100;
+    --laranja-alerta: #e6641f;
 
     --gap-padrao: 1.5rem;
     --raio-padrao: 10px;
@@ -31,6 +31,11 @@ body {
     background-color: var(--bg-fundo);
     color: var(--texto-principal);
     line-height: 1.6;
+    background-image: url('../imagens/Fundo.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
     
 }
 
@@ -53,7 +58,7 @@ main {
 .sidebar-nav {
     width: 250px;
     min-height: 100vh;
-    background: linear-gradient(180deg, #FFA500 0%, #FF6B00 100%);
+    background: linear-gradient(180deg, #04178f 0%, #0008ff 100%);
     display: flex;
     flex-direction: column;
     padding: 1.5rem 1rem;
@@ -204,7 +209,7 @@ nav a.active, nav a:hover {
 
 .btn-roxo {
     background-color: var(--roxo-badge);
-    color: #682583;
+    color: #ffffff;
 }
 
 .btn-roxo:hover {
@@ -255,7 +260,7 @@ nav a.active, nav a:hover {
 
 /* --- CARDS E CONTEÚDO PRINCIPAL --- */
 .conteudo {
-    background-color: var(--bg-card);
+    background-color: #0a37b98c;
     padding: 2rem;
     border-radius: var(--raio-padrao);
     
@@ -738,7 +743,7 @@ code {
     word-wrap: break-word;
     font-family: inherit;
     line-height: 1.6;
-    color: #e2e8f0;
+    color: #f9f8f8;
 }
 
 /* Estilização para blocos de código dentro da resposta da IA */
@@ -1148,7 +1153,7 @@ body:has(.container-auth) .sidebar-nav {
 /* Card IA */
 .card-ia {
     background-color: rgba(255, 140, 0, 0.05);
-    border: 1px solid var(--roxo-principal);
+    border: 1px solid white;
     border-radius: var(--raio-padrao);
     padding: 1.5rem;
     margin-top: 20px;
@@ -1180,14 +1185,14 @@ body:has(.container-auth) .sidebar-nav {
 
 .card-ia-aviso {
     font-size: 0.8rem;
-    color: var(--texto-secundario);
+    color: #98c6f0;
     margin-top: 15px;
     border-top: 1px solid rgba(255, 140, 0, 0.15);
     padding-top: 10px;
 }
 
 .texto-formatado {
-    color: var(--texto-principal);
+    color: white;
     line-height: 1.7;
 }
 
@@ -1195,9 +1200,9 @@ body:has(.container-auth) .sidebar-nav {
 .secao-titulo {
     margin-top: 40px;
     margin-bottom: 20px;
-    color: var(--texto-principal);
+    color: white;
     font-size: 1.2rem;
-    border-bottom: 2px solid var(--roxo-principal);
+    border-bottom: 2px solid white);
     padding-bottom: 8px;
 }
 
