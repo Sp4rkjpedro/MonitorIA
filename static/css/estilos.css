@@ -105,17 +105,9 @@ main {
     background: rgba(255, 255, 255, 0.28);
 }
 
-.sidebar-link-verde {
-    border: 1px solid ;
-    color: white;
-}
 
 .sidebar-link-verde:hover {
-    background: #1b5e20;
-}
-
-.sidebar-link-verde:hover {
-    background: rgba(74, 222, 128, 0.4);
+    background: #0067bb(74, 222, 128, 0.4);
 }
 
 .sidebar-footer {
