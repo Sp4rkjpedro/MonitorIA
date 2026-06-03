@@ -8,9 +8,9 @@
     --texto-secundario: #98c6f0;
     --texto-ia: #4a2f00;
 
-    --roxo-principal: #FF8C00;
-    --roxo-hover: #e67e00;
-    --roxo-badge: #6d80b98c;
+    --roxo-principal: #04178f;
+    --roxo-hover: #0067bb;
+    --roxo-badge: #0b1e57;
 
     --verde-resolvido: #2E7D32;
     --laranja-alerta: #e6641f;
@@ -42,7 +42,7 @@ body {
 /* --- LAYOUT --- */
 .container {
     margin-left: 250px !important;
-    max-width: 100%;
+   
     padding: 2rem var(--gap-padrao);
 }
 
@@ -58,7 +58,7 @@ main {
 .sidebar-nav {
     width: 250px;
     min-height: 100vh;
-    background: linear-gradient(180deg, #04178f 0%, #0008ff 100%);
+    background: linear-gradient(180deg, #04178f 0%, #000000 100%);
     display: flex;
     flex-direction: column;
     padding: 1.5rem 1rem;
@@ -106,8 +106,7 @@ main {
 }
 
 .sidebar-link-verde {
-    background: #2E7D32;
-    border: 1px solid #1b5e20;
+    border: 1px solid ;
     color: white;
 }
 
@@ -152,12 +151,7 @@ main {
     color: white;
 }
 
-/* Empurra o conteúdo para a direita da sidebar */
-.container {
-    margin-left: 250px !important;
-    max-width: calc(1200px - 250px);
-    padding: 2rem var(--gap-padrao);
-}
+
 
 .logo {
     font-size: 1.5rem;
@@ -260,7 +254,7 @@ nav a.active, nav a:hover {
 
 /* --- CARDS E CONTEÚDO PRINCIPAL --- */
 .conteudo {
-    background-color: #0a37b98c;
+    background-color: #04178fb0;
     padding: 2rem;
     border-radius: var(--raio-padrao);
     
@@ -808,7 +802,7 @@ code {
 
 /* Painel Esquerdo */
 .auth-painel-esquerdo {
-    background: linear-gradient(135deg, var(--roxo-principal), #3a1a6e);
+    background: linear-gradient(135deg, var(--roxo-principal), #000000);
     width: 40%;
     display: flex;
     align-items: center;
@@ -967,14 +961,6 @@ code {
     width: 100%;
 }
 
-.auth-painel-esquerdo {
-    background: linear-gradient(135deg, var(--roxo-principal), #7b2d8b);
-    width: 40%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 30px;
-}
 
 .auth-painel-direito {
     background-color: #ffffff;
@@ -1079,17 +1065,6 @@ body:has(.container-auth) .sidebar-nav {
     overflow: hidden;
 }
 
-.auth-painel-esquerdo {
-    background: linear-gradient(135deg, var(--roxo-principal), #7b2d8b);
-    width: 40%;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 30px;
-    position: sticky;
-    top: 0;
-}
 
 .auth-painel-unico {
     width: 60%;
@@ -1330,4 +1305,5 @@ body:has(.container-auth) .sidebar-nav {
 .voltar-link a:hover {
     text-decoration: underline;
 }
+
 
