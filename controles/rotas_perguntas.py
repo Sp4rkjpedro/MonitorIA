@@ -132,3 +132,15 @@ def debug_ia_respostas(id):
     p = servico.buscar_detalhes(id)
     melhor_id = servico_ia.analisar_melhor_resposta(p, p.respostas)
     return f"Sugestão de melhor resposta (ID): {melhor_id}" if melhor_id else "Nenhuma resposta ideal encontrada."
+
+@blueprint_perguntas.route('/modo-monitor')
+def modo_monitor():
+    if session.get('usuario_papel') != 'monitor':
+        flash("Acesso negado.", "erro")
+        return redirect(url_for('perguntas.base'))
+    
+    todas = servico.listar_todas()
+    return render_template('Modo_Monitor.html',
+                           perguntas=todas,
+                           disciplina_ativa=None,
+                           disciplinas=servico.listar_disciplinas())

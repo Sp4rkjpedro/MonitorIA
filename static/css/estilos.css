@@ -4,7 +4,7 @@
     --bg-card: #0a37b98c;
     --bg-ia: #fff8f0;
 
-    --texto-principal: #ffffff;
+    --texto-principal: #000000;
     --texto-secundario: #98c6f0;
     --texto-ia: #4a2f00;
 
@@ -1299,3 +1299,90 @@ body:has(.container-auth) .sidebar-nav {
 }
 
 
+/* === DASHBOARD === */
+.dash-header {
+    margin-bottom: 30px;
+}
+
+.dash-titulo {
+    font-size: 1.8rem;
+    color: var(--texto-principal);
+    margin-bottom: 5px;
+}
+
+.dash-subtitulo {
+    color: var(--texto-secundario);
+    font-size: 0.95rem;
+}
+
+.dash-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.dash-card {
+    background-color: var(--bg-card);
+    border: 1px solid #e2e8f0;
+    border-radius: var(--raio-padrao);
+    padding: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: box-shadow 0.2s;
+}
+
+.dash-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.dash-card-icone {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.dash-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.dash-card-label {
+    font-size: 0.85rem;
+    color: var(--texto-secundario);
+}
+
+.dash-card-valor {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: var(--texto-principal);
+    line-height: 1;
+}
+
+.dash-acao {
+    margin-top: 10px;
+}
+
+.dash-btn-acao {
+    padding: 12px 28px;
+    font-size: 1rem;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .dash-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .dash-cards {
+        grid-template-columns: 1fr;
+    }
+} 

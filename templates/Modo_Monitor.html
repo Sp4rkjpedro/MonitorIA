@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% if papel == 'monitor' %}
+
+<!-- DASHBOARD MONITOR -->
+<div class="dash-header">
+    <h1 class="dash-titulo">Painel do Monitor</h1>
+    <p class="dash-subtitulo">Visão geral das perguntas aguardando validação</p>
+</div>
+
+<!-- Cards de estatísticas -->
+<div class="dash-cards">
+    <div class="dash-card">
+        <div class="dash-card-icone" style="background: rgba(255,140,0,0.1);">
+            <img src="{{ url_for('static', filename='imagens/iconemonitor.png') }}" alt="Monitor" class="iconemonitor-ia">
+        </div>
+        <div class="dash-card-info">
+            <span class="dash-card-label">Monitor Virtual</span>
+            <span class="dash-card-valor" style="font-size: 0.9rem;">IA disponível</span>
+        </div>
+    </div>
+
+    <div class="dash-card">
+        <div class="dash-card-icone" style="background: rgba(255,140,0,0.1);">
+            <span style="font-size: 1.4rem;">❓</span>
+        </div>
+        <div class="dash-card-info">
+            <span class="dash-card-label">Perguntas pendentes</span>
+            <span class="dash-card-valor">{{ contagem_pendentes }}</span>
+        </div>
+    </div>
+
+    <div class="dash-card">
+        <div class="dash-card-icone" style="background: rgba(46,125,50,0.1);">
+            <span style="font-size: 1.4rem;">✅</span>
+        </div>
+        <div class="dash-card-info">
+            <span class="dash-card-label">Respostas validadas</span>
+            <span class="dash-card-valor">{{ contagem_resolvidas if contagem_resolvidas is defined else 0 }}</span>
+        </div>
+    </div>
+
+    <div class="dash-card">
+        <div class="dash-card-icone" style="background: rgba(230,81,0,0.1);">
+            <span style="font-size: 1.4rem;">⚠️</span>
+        </div>
+        <div class="dash-card-info">
+            <span class="dash-card-label">Sem resposta humana</span>
+            <span class="dash-card-valor">{{ contagem_pendentes }}</span>
+        </div>
+    </div>
+</div>
+
+<!-- Botão de ação -->
+<div class="dash-acao">
+    <a href="{{ url_for('perguntas.base') }}" class="btn btn-roxo dash-btn-acao">
+        🔍 Verificar Perguntas Pendentes
+    </a>
+</div>
+
+{% else %}
+
+<!-- DASHBOARD ALUNO -->
+<div class="dash-header">
+    <h1 class="dash-titulo">Olá, {{ nome }}!</h1>
+    <p class="dash-subtitulo">Visão geral do seu aprendizado</p>
+</div>
+
+<!-- Cards de estatísticas -->
+<div class="dash-cards">
+    <div class="dash-card">
+        <div class="dash-card-icone" style="background: rgba(255,140,0,0.1);">
+            <img src="{{ url_for('static', filename='imagens/monitor-ia.png') }}" alt="IA" class="iconemonitor-ia">
+        </div>
+        <div class="dash-card-info">
+            <span class="dash-card-label">Monitor Virtual</span>
+            <span class="dash-card-valor" style="font-size: 0.9rem;">IA disponível</span>
+        </div>
+    </div>
+
+    <div class="dash-card">
+        <div class="dash-card-icone" style="background: rgba(255,140,0,0.1);">
+            <span style="font-size: 1.4rem;">❓</span>
+        </div>
+        <div class="dash-card-info">
+            <span class="dash-card-label">Perguntas feitas</span>
+            <span class="dash-card-valor">{{ total_perguntas if total_perguntas is defined else 0 }}</span>
+        </div>
+    </div>
+
+    <div class="dash-card">
+        <div class="dash-card-icone" style="background: rgba(46,125,50,0.1);">
+            <span style="font-size: 1.4rem;">✅</span>
+        </div>
+        <div class="dash-card-info">
+            <span class="dash-card-label">Dúvidas respondidas</span>
+            <span class="dash-card-valor">{{ total_respondidas if total_respondidas is defined else 0 }}</span>
+        </div>
+    </div>
+
+    <div class="dash-card">
+        <div class="dash-card-icone" style="background: rgba(230,81,0,0.1);">
+            <span style="font-size: 1.4rem;">⏳</span>
+        </div>
+        <div class="dash-card-info">
+            <span class="dash-card-label">Dúvidas pendentes</span>
+            <span class="dash-card-valor">{{ total_pendentes if total_pendentes is defined else 0 }}</span>
+        </div>
+    </div>
+</div>
+
+
+
+{% endif %}
+
+{% endblock %}

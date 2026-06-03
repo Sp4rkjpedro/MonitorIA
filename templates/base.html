@@ -43,8 +43,8 @@
                 </div>
             </div>
         {% endif %}
-        {% if session.get('usuario_papel') == 'monitor' %}
-            <a href="{{ url_for('perguntas.base') }}" class="sidebar-link sidebar-link-verde">
+       {% if session.get('usuario_papel') == 'monitor' %}
+            <a href="{{ url_for('perguntas.modo_monitor') }}" class="sidebar-link sidebar-link-verde">
                 <img src="{{ url_for('static', filename='imagens/iconemonitor.png') }}" alt="Monitor" class="iconemonitor-ia"> Modo Monitor
             </a>
         {% endif %}
