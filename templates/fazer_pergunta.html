@@ -6,7 +6,7 @@
     <p class="subtitulo">Preencha os campos abaixo para receber auxílio dos monitores e da nossa IA.</p>
 </div>
 
-<form class="form-pergunta" action="{{ url_for('perguntas.fazer_pergunta') }}" method="post">
+<form class="form-pergunta" action="{{ url_for('perguntas.fazer_pergunta') }}" method="post" id="formulario-pergunta">
     
     <div class="form-grupo">
         <label for="titulo">Título da Pergunta</label>
@@ -62,17 +62,23 @@
 </form>
 
 <script>
-    // Lógica IA-001: Busca de duplicatas enquanto o aluno digita
     const inputTitulo = document.getElementById('titulo');
+    const selectDisciplina = document.getElementById('disciplina');
+    const txtCorpo = document.getElementById('corpo');
+    
     const boxAlerta = document.getElementById('alerta-ia-duplicata');
     const listaUl = document.getElementById('lista-duplicatas');
     let delayBusca;
 
-    inputTitulo.addEventListener('input', () => {
+    function executarBuscaDuplicatas() {
         clearTimeout(delayBusca);
-        const texto = inputTitulo.value.trim();
+        
+        const tituloTexto = inputTitulo.value.trim();
+        const disciplinaTexto = selectDisciplina.value;
+        const corpoTexto = txtCorpo.value.trim();
 
-        if (texto.length < 8) {
+        // Só executa a verificação se tiver disciplina selecionada e título mínimo
+        if (tituloTexto.length < 8 || !disciplinaTexto) {
             boxAlerta.style.display = 'none';
             return;
         }
@@ -81,11 +87,16 @@
             fetch("{{ url_for('perguntas.checar_duplicatas') }}", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ titulo: texto })
+                body: JSON.stringify({ 
+                    titulo: tituloTexto,
+                    disciplina: disciplinaTexto,
+                    corpo: corpoTexto
+                })
             })
             .then(res => res.json())
             .then(dados => {
-                if (dados.length > 0) {
+                // Se a IA retornar uma duplicata real na MESMA disciplina
+                if (dados && dados.length > 0) {
                     listaUl.innerHTML = '';
                     dados.forEach(pergunta => {
                         const li = document.createElement('li');
@@ -99,8 +110,12 @@
                 }
             })
             .catch(err => console.error("Erro na busca de duplicatas:", err));
-        }, 800); // Aguarda o usuário parar de digitar por 800ms
-    });
+        }, 600); // Reduzido para 600ms para maior fluidez
+    }
+
+    inputTitulo.addEventListener('input', executarBuscaDuplicatas);
+    selectDisciplina.addEventListener('change', executarBuscaDuplicatas);
+    txtCorpo.addEventListener('input', executarBuscaDuplicatas);
 </script>
 
 <style>
@@ -113,9 +128,8 @@
         align-items: center;
         border-radius: 4px;
     }
-    .icone-ia { font-size: 24px; margin-right: 15px; }
     .box-ia-aviso p { margin: 0; font-size: 0.9rem; color: #e0e0e0; }
+    .iconemonitor-ia { width: 24px; height: 24px; margin-right: 12px; vertical-align: middle; }
     .btn-link { color: #ccc; text-decoration: none; margin-left: 15px; }
 </style>
-<script src="{{ url_for('static', filename='js/FazerPerguntas.js') }}"></script>
 {% endblock %}

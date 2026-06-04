@@ -36,12 +36,16 @@ def checar_duplicatas():
     """IA-001: Rota AJAX chamada pelo frontend enquanto o aluno digita."""
     dados = request.get_json()
     titulo_parcial = dados.get('titulo', '').strip()
+    corpo_parcial = dados.get('corpo', '').strip() # 💡 Captura se já houver algo digitado no corpo
+    disciplina_parcial = dados.get('disciplina', '').strip() # 💡 Captura a disciplina selecionada
     
     if len(titulo_parcial) < 8:
         return jsonify([])
 
     todas = servico.listar_todas()
-    duplicatas = servico_ia.buscar_duplicatas(titulo_parcial, todas)
+    
+    # 🚀 ATUALIZADO: Passando os novos parâmetros para a checagem dinâmica em tempo real
+    duplicatas = servico_ia.buscar_duplicatas(titulo_parcial, corpo_parcial, disciplina_parcial, todas)
     
     resultado = [{"id": p.id, "titulo": p.titulo} for p in duplicatas]
     return jsonify(resultado)
@@ -61,6 +65,7 @@ def fazer_pergunta():
         print(f"[REQUISIÇÃO POST] Recebendo dados do formulário do Felipe:")
         print(f"- Título: '{titulo}'")
         print(f"- Corpo: '{corpo}'")
+        print(f"- Disciplina: '{disciplina}'")
         print("="*50 + "\n")
 
         if not titulo or not corpo:
@@ -69,7 +74,7 @@ def fazer_pergunta():
 
         texto_completo = f"{titulo} {corpo}"
 
-        # 1. IA-003: Guardrail de Conteúdo
+        # 1. IA-003: Guardrail de Conteúdo (Agora mais restrito contra deboche/ironia)
         if not servico_ia.verificar_conteudo_adequado(texto_completo):
             flash("Sua publicação contém termos inadequados para o ambiente acadêmico.", "perigo")
             return render_template('fazer_pergunta.html', disciplinas=servico.listar_disciplinas())
@@ -81,8 +86,10 @@ def fazer_pergunta():
 
         # 3. IA-001: Trava final de duplicata no servidor
         todas = servico.listar_todas()
-        if servico_ia.buscar_duplicatas(titulo, todas):
-            flash("Pergunta muito similar já existe!", "perigo")
+        
+        # 🚀 ATUALIZADO: Passando título, corpo e disciplina para evitar falsos positivos de outras matérias
+        if servico_ia.buscar_duplicatas(titulo, corpo, disciplina, todas):
+            flash("Pergunta muito similar nesta mesma disciplina já existe!", "perigo")
             return redirect(url_for('perguntas.fazer_pergunta'))
 
         dados = {

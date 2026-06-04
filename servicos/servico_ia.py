@@ -18,49 +18,81 @@ class ServicoIA:
         self.client = cliente_ia or Groq(api_key=self.api_key)
         self.modelo = "llama-3.1-8b-instant"
 
-    def buscar_duplicatas(self, rascunho_titulo, lista_perguntas):
-        """IA-001: Identifica se o título digitado já existe no banco (Semântica)."""
-        if not rascunho_titulo or not lista_perguntas:
+    def buscar_duplicatas(self, rascunho_titulo, rascunho_corpo, rascunho_disciplina, lista_perguntas):
+        """IA-001: Identifica duplicatas filtrando estritamente por disciplina no Python antes de chamar a IA."""
+        if not rascunho_titulo or not lista_perguntas or not rascunho_disciplina:
             return []
 
-        contexto = [{"id": p.id, "titulo": p.titulo} for p in lista_perguntas]
+        # 🚀 FILTRO ESTRUTURAL EM PYTHON: Isola apenas as dúvidas da matéria correspondente
+        perguntas_mesma_disciplina = [
+            p for p in lista_perguntas 
+            if getattr(p, 'disciplina', '').strip().lower() == rascunho_disciplina.strip().lower()
+        ]
+
+        # Se não há registros prévios nesta disciplina, não há o que validar
+        if not perguntas_mesma_disciplina:
+            logger.info(f"[DUPLICATAS] Nenhuma pergunta existente cadastrada na disciplina '{rascunho_disciplina}'. Aprovado automaticamente.")
+            return []
+
+        # Transforma apenas a lista filtrada em entradas limpas de texto
+        linhas = []
+        for p in perguntas_mesma_disciplina:
+            tit = getattr(p, 'titulo', '').strip()
+            linhas.append(f"DATABASE_ENTRY -> ID: {p.id} | TITULO: {tit}")
+        
+        texto_existentes = "\n".join(linhas)
+
         prompt = (
-            f"Analise o título: '{rascunho_titulo}'.\n"
-            f"Lista de existentes: {contexto}\n"
-            "Se houver alguma duplicata semântica, responda APENAS o ID numérico. "
-            "Se não houver nada similar, responda 'ZERO'."
+            "Determine se a nova pergunta é uma duplicata conceitual ou idêntica de algum item da lista abaixo.\n\n"
+            "[NOVA PERGUNTA CANDIDATA]\n"
+            f"TITULO_SOLICITADO: {rascunho_titulo}\n\n"
+            f"[PERGUNTAS EXISTENTES NA DISCIPLINA {rascunho_disciplina.upper()}]\n"
+            f"{texto_existentes}\n\n"
+            "REGRA DE SAÍDA ESTRITA:\n"
+            "- Se encontrar um título com o mesmo conceito ou assunto idêntico, retorne APENAS o número do ID (ex: 10).\n"
+            "- Se não houver duplicata idêntica, retorne APENAS: ZERO\n"
+            "Proibido adicionar justificativas, pontuações ou explicações. Responda com uma única palavra."
         )
 
         try:
             completion = self.client.chat.completions.create(
                 messages=[{"role": "user", "content": prompt}],
                 model=self.modelo,
-                temperature=0 
+                temperature=0.0  # Máximo determinismo
             )
-            resposta = completion.choices[0].message.content.strip()
-            id_encontrado = re.search(r'\d+', resposta)
+            resposta = completion.choices[0].message.content.strip().upper()
             
-            if "ZERO" in resposta.upper() or not id_encontrado:
+            logger.info(f"[DUPLICATAS IA] Avaliação de assunto em '{rascunho_disciplina}'. Resposta da Groq: '{resposta}'")
+            
+            if "ZERO" in resposta or not resposta:
+                return []
+
+            id_encontrado = re.search(r'\d+', resposta)
+            if not id_encontrado:
                 return []
 
             id_final = int(id_encontrado.group())
-            return [p for p in lista_perguntas if p.id == id_final]
+            return [p for p in perguntas_mesma_disciplina if p.id == id_final]
         except Exception as e:
             logger.error(f"Erro ao buscar duplicatas: {e}")
             return []
 
     def verificar_conteudo_adequado(self, texto: str) -> bool:
-        """IA-003: Guardrail - Bloqueia xingamentos, insultos e termos inadequados."""
+        """IA-003: Guardrail - Bloqueia rigidamente ofensas, difamações e desrespeito acadêmico."""
         if not texto or not texto.strip():
             return False
 
         prompt = (
-            "Você é um sistema automatizado de moderação de conteúdo para um fórum acadêmico universitário.\n"
-            "Analise estritamente o texto fornecido abaixo.\n"
-            "Se o texto contiver QUALQUER palavrão, xingamento, insulto vulgar, grosseria ou ofensa direcionada, seu veredicto deve ser INVALIDO.\n"
-            "Se o texto for totalmente respeitoso e adequado para uma sala de aula, seu veredicto deve ser VALIDO.\n\n"
-            "Forneça sua resposta final em letras maiúsculas dentro de colchetes, exatamente como nos exemplos: [VALIDO] ou [INVALIDO].\n"
-            f"Texto para análise: \"{texto}\""
+            "Você é um moderador de conteúdo estrito para um fórum universitário.\n"
+            "Sua tarefa é avaliar se o texto abaixo viola as regras de respeito e convivência.\n\n"
+            "REGRAS DE BLOQUEIO [INVALIDO]:\n"
+            "- Bloqueie qualquer texto que contenha xingamentos, insultos (como chamar alguém de mané, burro, incompetente, etc.).\n"
+            "- Bloqueie insinuações difamatórias, deboche contra a equipe, professores, monitores ou colegas (ex: 'comprou o diploma', 'essa merda').\n"
+            "- Bloqueie agressividade verbal crassa e ataques pessoais.\n\n"
+            "REGRAS DE LIBERAÇÃO [VALIDO]:\n"
+            "- Permita dúvidas reais mesmo que escritas com erros de português, gírias leves de internet, frustrações estritamente técnicas com o código ou desabafos de cansaço com a matéria (ex: 'não aguento mais esse erro', 'tá muito difícil entender listas').\n\n"
+            f"Texto para análise: \"{texto}\"\n\n"
+            "Regra de Saída Estrita: Responda APENAS [VALIDO] ou [INVALIDO]. Não adicione nenhuma justificativa ou explicação adicional."
         )
         try:
             completion = self.client.chat.completions.create(
@@ -69,10 +101,9 @@ class ServicoIA:
                 temperature=0.0
             )
             resultado = completion.choices[0].message.content.strip().upper()
-            logger.info(f"[GUARDRAIL IA] Resposta bruta da API: '{resultado}' para o texto: '{texto[:30]}...'")
+            logger.info(f"[GUARDRAIL IA] Resposta bruta da API: '{resultado}'")
             
-            # Bloqueio garantido: Se a palavra INVALIDO aparecer em qualquer lugar da string, rejeita.
-            if "INVALIDO" in resultado:
+            if "INVALIDO" in resultado and "VALIDO" not in resultado:
                 return False
             return True
         except Exception as e:
@@ -86,11 +117,10 @@ class ServicoIA:
 
         prompt = (
             "Você é um avaliador de postagens acadêmicas.\n"
-            "Determine se a publicação abaixo é uma dúvida real, legítima ou compreensível de um estudante, "
-            "ou se constitui apenas spam de teclado, sequências de caracteres aleatórios sem nexo (ex: 'asdf', 'ghjk', 'teste123'), ou texto completamente sem sentido lógico.\n\n"
-            "Regra estrita de saída: Responda obrigatoriamente [COERENTE] se for uma dúvida inteligível ou [INCOERENTE] se for lixo/spam de digitação.\n\n"
+            "Determine se a publicação abaixo é uma dúvida compreensível de um estudante ou apenas spam de teclado sem nexo (ex: 'asdf', 'ghjk').\n\n"
             f"Título: {titulo}\n"
-            f"Corpo: {corpo}"
+            f"Corpo: {corpo}\n\n"
+            "Regra estrita de saída: Responda obrigatoriamente [COERENTE] se for inteligível ou [INCOERENTE] se for lixo/spam de digitação. Não adicione mais nada."
         )
         try:
             completion = self.client.chat.completions.create(
@@ -101,8 +131,7 @@ class ServicoIA:
             resultado = completion.choices[0].message.content.strip().upper()
             logger.info(f"[COERÊNCIA IA] Resposta bruta da API: '{resultado}'")
             
-            # Bloqueio garantido: Se a IA rotular como INCOERENTE, rejeita.
-            if "INCOERENTE" in resultado:
+            if "INCOERENTE" in resultado and "COERENTE" not in resultado:
                 return False
             return True
         except Exception as e:
@@ -110,7 +139,7 @@ class ServicoIA:
             return True
 
     def gerar_sugestao_monitoria(self, pergunta):
-        """IA-002: Gera resposta curta com blocos de código Markdown."""
+        """IA-002: Gera resposta corta com blocos de código Markdown."""
         prompt = (
             f"Você é o 'MonitorIA', um monitor acadêmico especialista.\n"
             f"DISCIPLINA: {pergunta.disciplina}\n"
